@@ -3,7 +3,7 @@
 ### Date: 10-02-2025
 
 #Basic Import
-from matplotlib.pyplot import plot
+import matplotlib.pyplot as plt
 import numpy as np
 #import scipy.optimize as opm
 
@@ -34,6 +34,7 @@ class silo():
     def quantity(self,dt):
         quant = self.flow*dt
         return quant
+    
 
 
 # conveyor definition, use later for overflow check calculation
@@ -55,26 +56,28 @@ def shift_matrix_right(matrix, steps):
     # Desloca cada elemento para a direita pelo número especificado de passos
     for i in range(rows):
         for j in range(cols):
-            shifted_matrix[i, (j + steps) % cols] = matrix[i, j]
+            if j+steps < cols:
+                shifted_matrix[i, (j + steps)] = matrix[i, j]
     
-    null_list = np.zeros((1,rows))
-    
-    shifted_matrix[:,0] = null_list
-
     return shifted_matrix
+
+     
+    
 
 # initial definitions to the problem 
 
-#total time and timestep
-t_total = 100
-dt = 0.5
-
+#total time only timestep and number of steps will be defined by speed and spacing definition
+t_total = 150
 # conveyor lenght 
-l = 20 # meters
-div_lenght = 0.05 # detailing for each 10 centimeters
+l = 40 # meters
+div_lenght = 1 # detailing for each 10 centimeters
 
 # conveyor speed
-v = 1.5 #m/s
+v = 2 #m/s
+
+#delta t and n_steps
+dt = div_lenght/v
+n_steps = int(t_total/dt)
 
 # Number of materials
 n_mat = 4
@@ -87,16 +90,20 @@ nut_coke = material(density=600)
 lump_ore = material(density=2300)
 pellet = material(density=2400)
 
-# Silo assignment - carefull with silo distancing (get from drawings)
-s1 = silo(1000, sinter, flow=300, position=(0,1), start = 20, end = 80)
-s2 = silo(1000, nut_coke, flow=150, position=(1,3), start = 20, end = 30)
-s3 = silo(1000, lump_ore, flow=300, position=(2,5),start = 35, end = 45)
-s4 = silo(1000, pellet, flow=300, position=(3,7),start = 20, end = 80)
+# Silo assignment - carefull with silo distancing (get from drawings) - need to put numbers based on drawings to make sense
+s1 = silo(1000, sinter, flow=300, position=(0,1), start = 20, end = 90)
+s2 = silo(1000, nut_coke, flow=150, position=(1,3), start = 50, end = 60)
+s3 = silo(1000, lump_ore, flow=300, position=(2,5),start = 20, end = 30)
+s4 = silo(1000, pellet, flow=300, position=(3,7),start = 30, end = 60)
 
 # lets try without iteration and loops first to get the feeling in the guts
+#save data matrix
+
+save_data = np.zeros((n_steps+1, int(n_mat+1)))
 
 # initialization 
 time = 0
+counter = 0
 # calculate the quantity of each silo in the conveyor for the timestep
 while (time <= t_total):
     #now get the size of the step in the matrix
@@ -127,19 +134,31 @@ while (time <= t_total):
         mat[s4.position] = mat[s4.position] + 0
 
  
-    print(list(mat))
+    #print(list(mat))
     
     point = mat[:,int(l/div_lenght)-1]
     
     #save the data
-    save = np.append(point, dt)
+    save_data[counter,:] = np.append(point, time)
         
     mat = shift_matrix_right(mat, steps=step)
 
     time = time + dt
+    counter = counter + 1
     print("Tempo de simulacao", time)
-    
-print(mat.sum(axis=0))
-    
+    print(counter)
+
+
+
+print(save_data)
+plt.plot(save_data[:,4], save_data[:,0], c = "r", label = "Sinter")
+plt.plot(save_data[:,4], save_data[:,1], c = "b", label = "Nut")
+plt.plot(save_data[:,4], save_data[:,2], c = "g", label = "Lump")
+plt.plot(save_data[:,4], save_data[:,3], c = "y", label = "Pellet")
+plt.title("1st result of simulation of conveyot material")
+plt.xlabel("Time [s] - timestep of 0.05 s")
+plt.ylabel("Tons of each material at point x = 40 m - 1m of conveyor")
+plt.legend()
+plt.show()
     
     
