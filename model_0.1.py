@@ -36,11 +36,11 @@ class silo():
         return quant
     
 
-
 # conveyor definition, use later for overflow check calculation
 class conveyor:
-    def __init__(self):
-        pass
+    def __init__(self, velocity, lenght):
+        self.velocity  = velocity
+        self.lenght = lenght
 
 # Auxiliary Functions #
 def shift_matrix_right(matrix, steps):
@@ -61,40 +61,63 @@ def shift_matrix_right(matrix, steps):
     
     return shifted_matrix
 
-     
-    
-
 # initial definitions to the problem 
 
 #total time only timestep and number of steps will be defined by speed and spacing definition
-t_total = 150
+t_total = 180
 # conveyor lenght 
 l = 40 # meters
-div_lenght = 1 # detailing for each 10 centimeters
-
+div_lenght = 1 # consider 1 meter to make easily the positioning of each silo 
 # conveyor speed
-v = 2 #m/s
+v = 1.5 #m/s
 
 #delta t and n_steps
 dt = div_lenght/v
 n_steps = int(t_total/dt)
 
 # Number of materials
-n_mat = 4
+n_mat = 6
 # matrix initiation 
 mat = np.zeros((n_mat,int(l/div_lenght)))
 
 # Definition of materials 
-sinter = material(density=2200)
-nut_coke = material(density=600)
-lump_ore = material(density=2300)
-pellet = material(density=2400)
+#sinter = material(density=2200)
+#nut_coke = material(density=600)
+#lump_ore = material(density=2300)
+#pellet = material(density=2400)
+
+coal = material(density=900)
+
+#consider the 300t silo variying t/h from 22 to 60 and 150t from 6 to 40
+
+#make this an objective function the flow of 400 t/h to calculate the flows for each conveyor belt
+
+#material organization in the flow matrix
+#BST = 0
+#APL = 1
+#DBI = 2
+#PIT = 3
+#KNC = 4
+#CMS = 5
+
+#consider each silo separated by 3 meters
 
 # Silo assignment - carefull with silo distancing (get from drawings) - need to put numbers based on drawings to make sense
-s1 = silo(1000, sinter, flow=300, position=(0,1), start = 20, end = 90)
-s2 = silo(1000, nut_coke, flow=150, position=(1,3), start = 50, end = 60)
-s3 = silo(1000, lump_ore, flow=300, position=(2,5),start = 20, end = 30)
-s4 = silo(1000, pellet, flow=300, position=(3,7),start = 30, end = 60)
+s1  = silo(capacity=300 ,material="BST" , flow = 34, position=(0,3), start=10, end=140)
+s2  = silo(capacity=300 ,material="PIT" , flow = 34, position=(3,6), start=12, end=140)
+s3  = silo(capacity=150 ,material="DBI" , flow = 15, position=(2,9), start=14, end=140)
+s4  = silo(capacity=150 ,material="DBI" , flow = 15, position=(2,12), start=16,end=140)
+s5  = silo(capacity=300 ,material="APL" , flow = 38, position=(1,15), start=18,end=140)
+s6  = silo(capacity=300 ,material="CMS" , flow = 36, position=(5,18), start=20,end=140)
+s7  = silo(capacity=300 ,material="BST" , flow = 34, position=(0,21), start=22,end=140)
+s8  = silo(capacity=300 ,material="BST" , flow = 30, position=(0,3), start=10, end=140)
+s9  = silo(capacity=300 ,material="KNC" , flow = 30, position=(4,6), start=12, end=140)
+s10 = silo(capacity=150 ,material="RES" , flow = 0 , position=(0,9), start=14, end=140) #the spare silo is put in the 1st element of the matrix as convention
+s11 = silo(capacity=150 ,material="APL" , flow = 19, position=(1,12), start=16, end=140)
+s12 = silo(capacity=300 ,material="PIT" , flow = 23, position=(3,15), start=18, end=140)
+s13 = silo(capacity=300 ,material="CMS" , flow = 36, position=(5,18), start=20, end=140)
+s14 = silo(capacity=300 ,material="BST" , flow = 34, position=(0,21), start=22, end=140)
+
 
 # lets try without iteration and loops first to get the feeling in the guts
 #save data matrix
@@ -111,7 +134,8 @@ while (time <= t_total):
     ds = v*dt
     step = round(ds/div_lenght)
 
-    #Put the material in conveyor 
+    #Put the material in conveyor - need to transform this after in a loop to get any number of materials and silos loading the conveyor 
+    #easer configuration maybe is a array of classes objects, so the most problematica part will be only the ajusts to the system.
 
     if time>=s1.start and time<=s1.end:
         mat[s1.position] = mat[s1.position] + s1.quantity(dt)
@@ -132,8 +156,60 @@ while (time <= t_total):
         mat[s4.position] = mat[s4.position] + s4.quantity(dt)
     else:
         mat[s4.position] = mat[s4.position] + 0
+    
+    if time>=s5.start and time<=s5.end:
+        mat[s5.position] = mat[s5.position] + s5.quantity(dt)
+    else:
+        mat[s5.position] = mat[s5.position] + 0
+    
+    if time>=s6.start and time<=s6.end:
+        mat[s6.position] = mat[s6.position] + s6.quantity(dt)
+    else:
+        mat[s6.position] = mat[s6.position] + 0
+    
+    if time>=s7.start and time<=s7.end:
+        mat[s7.position] = mat[s7.position] + s7.quantity(dt)
+    else:
+        mat[s7.position] = mat[s7.position] + 0
+    
+    if time>=s8.start and time<=s8.end:
+        mat[s8.position] = mat[s8.position] + s8.quantity(dt)
+    else:
+        mat[s8.position] = mat[s8.position] + 0
+    
+    if time>=s9.start and time<=s9.end:
+        mat[s9.position] = mat[s9.position] + s9.quantity(dt)
+    else:
+        mat[s9.position] = mat[s9.position] + 0
+    
+    if time>=s10.start and time<=s10.end:
+        mat[s10.position] = mat[s10.position] + s10.quantity(dt)
+    else:
+        mat[s10.position] = mat[s10.position] + 0
+    
+    if time>=s11.start and time<=s11.end:
+        mat[s9.position] = mat[s11.position] + s11.quantity(dt)
+    else:
+        mat[s11.position] = mat[s11.position] + 0
+    
+    if time>=s12.start and time<=s12.end:
+        mat[s12.position] = mat[s12.position] + s12.quantity(dt)
+    else:
+        mat[s12.position] = mat[s12.position] + 0
+    
+    if time>=s13.start and time<=s13.end:
+        mat[s13.position] = mat[s13.position] + s13.quantity(dt)
+    else:
+        mat[s13.position] = mat[s13.position] + 0
+    
+    if time>=s14.start and time<=s14.end:
+        mat[s14.position] = mat[s14.position] + s14.quantity(dt)
+    else:
+        mat[s14.position] = mat[s14.position] + 0
 
- 
+    
+    
+    
     #print(list(mat))
     
     point = mat[:,int(l/div_lenght)-1]
@@ -151,10 +227,12 @@ while (time <= t_total):
 
 
 print(save_data)
-plt.plot(save_data[:,4], save_data[:,0], c = "r", label = "Sinter")
-plt.plot(save_data[:,4], save_data[:,1], c = "b", label = "Nut")
-plt.plot(save_data[:,4], save_data[:,2], c = "g", label = "Lump")
-plt.plot(save_data[:,4], save_data[:,3], c = "y", label = "Pellet")
+plt.plot(save_data[:,6], save_data[:,0], c = "r", label = "BST")
+plt.plot(save_data[:,6], save_data[:,1], c = "b", label = "APL")
+plt.plot(save_data[:,6], save_data[:,2], c = "g", label = "DBI")
+plt.plot(save_data[:,6], save_data[:,3], c = "#000258", label = "PIT")
+plt.plot(save_data[:,6], save_data[:,4], c = "#FFF258", label = "KNC")
+plt.plot(save_data[:,6], save_data[:,5], c = "#AB3258", label = "CMS")
 plt.title("1st result of simulation of conveyot material")
 plt.xlabel("Time [s] - timestep of 0.05 s")
 plt.ylabel("Tons of each material at point x = 40 m - 1m of conveyor")
