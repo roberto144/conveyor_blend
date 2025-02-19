@@ -3,6 +3,7 @@
 ### Date: 10-02-2025
 
 #Basic Import
+from cProfile import label
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -97,20 +98,17 @@ def calcular_proporcoes(matriz):
 
 #total time only timestep and number of steps will be defined by speed and spacing definition
 t_total = 180
-# conveyor lenght 
-l = 40 # meters
 div_lenght = 1 # consider 1 meter to make easily the positioning of each silo 
-# conveyor speed
-v = 1.5 #m/s
-
+# conveyor details (lenght and velocity) 
+c1 = conveyor(velocity=1.5, lenght=40)
 #delta t and n_steps
-dt = div_lenght/v
+dt = div_lenght/c1.velocity
 n_steps = int(t_total/dt)
 
 # Number of materials
 n_mat = 6
 # matrix initiation 
-mat = np.zeros((n_mat,int(l/div_lenght)))
+mat = np.zeros((n_mat,int(c1.lenght/div_lenght)))
 
 # Definition of materials 
 #sinter = material(density=2200)
@@ -150,9 +148,14 @@ s12 = silo(capacity=300 ,material="PIT" , flow = 23, position=(3,15), start=18, 
 s13 = silo(capacity=300 ,material="CMS" , flow = 36, position=(5,18), start=20, end=140)
 s14 = silo(capacity=300 ,material="BST" , flow = 34, position=(0,21), start=22, end=140)
 
+#array of silos
+
+silos = [s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,s14]
 
 # lets try without iteration and loops first to get the feeling in the guts
 #save data matrix
+
+ 
 
 save_data = np.zeros((n_steps+1, int(n_mat+2)))
 
@@ -163,88 +166,21 @@ counter = 0
 while (time <= t_total):
     #now get the size of the step in the matrix
     #calculate the next position of the points - first calculate the delta in distance for each timestep
-    ds = v*dt
+    ds = c1.velocity*dt
     step = round(ds/div_lenght)
-
+    aux = len(silos)
     #Put the material in conveyor - need to transform this after in a loop to get any number of materials and silos loading the conveyor 
     #easer configuration maybe is a array of classes objects, so the most problematica part will be only the ajusts to the system.
-
-    if time>=s1.start and time<=s1.end:
-        mat[s1.position] = mat[s1.position] + s1.quantity(dt)
-    else:
-        mat[s1.position] = mat[s1.position] + 0
     
-    if time>=s2.start and time<=s2.end:
-        mat[s2.position] = mat[s2.position] + s2.quantity(dt)
-    else:
-        mat[s2.position] = mat[s2.position] + 0    
-
-    if time>=s3.start and time<=s3.end:
-        mat[s3.position] = mat[s3.position] + s3.quantity(dt)
-    else:
-        mat[s3.position] = mat[s3.position] + 0
-
-    if time>=s4.start and time<=s4.end:
-        mat[s4.position] = mat[s4.position] + s4.quantity(dt)
-    else:
-        mat[s4.position] = mat[s4.position] + 0
-    
-    if time>=s5.start and time<=s5.end:
-        mat[s5.position] = mat[s5.position] + s5.quantity(dt)
-    else:
-        mat[s5.position] = mat[s5.position] + 0
-    
-    if time>=s6.start and time<=s6.end:
-        mat[s6.position] = mat[s6.position] + s6.quantity(dt)
-    else:
-        mat[s6.position] = mat[s6.position] + 0
-    
-    if time>=s7.start and time<=s7.end:
-        mat[s7.position] = mat[s7.position] + s7.quantity(dt)
-    else:
-        mat[s7.position] = mat[s7.position] + 0
-    
-    if time>=s8.start and time<=s8.end:
-        mat[s8.position] = mat[s8.position] + s8.quantity(dt)
-    else:
-        mat[s8.position] = mat[s8.position] + 0
-    
-    if time>=s9.start and time<=s9.end:
-        mat[s9.position] = mat[s9.position] + s9.quantity(dt)
-    else:
-        mat[s9.position] = mat[s9.position] + 0
-    
-    if time>=s10.start and time<=s10.end:
-        mat[s10.position] = mat[s10.position] + s10.quantity(dt)
-    else:
-        mat[s10.position] = mat[s10.position] + 0
-    
-    if time>=s11.start and time<=s11.end:
-        mat[s9.position] = mat[s11.position] + s11.quantity(dt)
-    else:
-        mat[s11.position] = mat[s11.position] + 0
-    
-    if time>=s12.start and time<=s12.end:
-        mat[s12.position] = mat[s12.position] + s12.quantity(dt)
-    else:
-        mat[s12.position] = mat[s12.position] + 0
-    
-    if time>=s13.start and time<=s13.end:
-        mat[s13.position] = mat[s13.position] + s13.quantity(dt)
-    else:
-        mat[s13.position] = mat[s13.position] + 0
-    
-    if time>=s14.start and time<=s14.end:
-        mat[s14.position] = mat[s14.position] + s14.quantity(dt)
-    else:
-        mat[s14.position] = mat[s14.position] + 0
-
-    
-    
+    for i in range(aux):
+        if time>=silos[i].start and time<=silos[i].end:
+            mat[silos[i].position] = mat[silos[i].position] + silos[i].quantity(dt)
+        else:
+            mat[silos[i].position] = mat[silos[i].position] + 0
     
     #print(list(mat))
     
-    point = mat[:,int(l/div_lenght)-1]
+    point = mat[:,int(c1.lenght/div_lenght)-1]
     sum = np.sum(point)
     #save the data
     save_data[counter,:] = np.concatenate((point, time,sum),axis=None)
@@ -268,33 +204,56 @@ save_prop = calcular_proporcoes(save_data)
 
 print(pd.DataFrame(save_data).to_markdown())
 
-fig, ax = plt.subplots(2,1)
-#plot 1
-ax[0].plot(save_data[:,6], save_data[:,0], c = "r", label = "BST")
-ax[0].plot(save_data[:,6], save_data[:,1], c = "b", label = "APL")
-ax[0].plot(save_data[:,6], save_data[:,2], c = "g", label = "DBI")
-ax[0].plot(save_data[:,6], save_data[:,3], c = "#000258", label = "PIT")
-ax[0].plot(save_data[:,6], save_data[:,4], c = "#FFF258", label = "KNC")
-ax[0].plot(save_data[:,6], save_data[:,5], c = "#AB3258", label = "CMS")
-ax[0].legend()
-ax[0].set_xlim(0,t_total)
-ax[0].set_title("Material Positioning")
 
 
-#plot 2
-ax[1].stackplot(save_data[:,6],
-              save_prop[:,0],
-              save_prop[:,1],
-              save_prop[:,2],
-              save_prop[:,3],
-              save_prop[:,4],
-              save_prop[:,5],
-              labels=["BST", "APL","DBI","PIT","KNC","CMS"])
-ax[1].set_title("Material Proportion in Conveyor")
-ax[1].set_xlim(0,t_total)
-ax[1].legend()
+####### Plot the data #######
+# need to transform this in a function so i can make various types of anything
 
-plt.show()
+def show_data(matrix_ton, matrix_pr, t_total,silos):
 
-    
+    #details about the enter data
+    #matrix_ton = matrix with data per material with t/h 
+    #matrix_pr = matrix with proportional data, to get a better blend view
+    #t_total = total time to get a proper x axis size
+    #silos = array with all silos object in analysis. 
+    fig, ax = plt.subplots(2,2, figsize = (12,6))
+    #plot 1 - positioning
+    ax[0,0].plot(matrix_ton[:,6], matrix_ton[:,0], c = "r", label = "BST")
+    ax[0,0].plot(matrix_ton[:,6], matrix_ton[:,1], c = "b", label = "APL")
+    ax[0,0].plot(matrix_ton[:,6], matrix_ton[:,2], c = "g", label = "DBI")
+    ax[0,0].plot(matrix_ton[:,6], matrix_ton[:,3], c = "#000258", label = "PIT")
+    ax[0,0].plot(matrix_ton[:,6], matrix_ton[:,4], c = "#FFF258", label = "KNC")
+    ax[0,0].plot(matrix_ton[:,6], matrix_ton[:,5], c = "#AB3258", label = "CMS")
+    ax[0,0].legend()
+    ax[0,0].set_xlim(0,t_total)
+    ax[0,0].set_title("Material Positioning")
+    ax[0,0].set_ylabel("material flow [t/h]")
+
+
+    #plot 2 - proportion plot
+    ax[1,0].stackplot(matrix_ton[:,6],
+                  matrix_pr[:,0],
+                  matrix_pr[:,1],
+                  matrix_pr[:,2],
+                  matrix_pr[:,3],
+                  matrix_pr[:,4],
+                  matrix_pr[:,5],
+                  labels=["BST", "APL","DBI","PIT","KNC","CMS"])
+    ax[1,0].set_title("Material Proportion in Conveyor")
+    ax[1,0].set_xlim(0,t_total)
+    ax[1,0].legend()
+    ax[1,0].set_ylabel("% material")
+
+    #plot 3 - main flow in conveyor
+    ax[0,1].plot(matrix_ton[:,6], matrix_ton[:,7])
+    ax[0,1].set_title("Flow in the Conveyor Belt")
+
+    #plot 4 - silo functioning during the total time 
+    #this one is tricky but lets try
+    for j in range(len(silos)):
+        ax[1,1].broken_barh([(silos[j].start,silos[j].end)],(j+0.2,0.3))
+
+    plt.show()
+
+show_data(save_data, save_prop, t_total=t_total, silos=silos)
     
