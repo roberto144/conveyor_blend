@@ -13,12 +13,12 @@ class material:
 
 class silo:
     def __init__(self, capacity, material, flow, position, start, end):
-        self.material = material
-        self.capacity = capacity
-        self.flow = flow
+        self.material = str(material)
+        self.capacity = float(capacity)
+        self.flow = float(flow)
         self.position = position
-        self.start = start
-        self.end = end
+        self.start = float(start)
+        self.end = float(end)
 
     def quantity(self, dt):
         quant = self.flow * dt
@@ -80,7 +80,7 @@ def show_data(ax,matrix_ton, matrix_pr, t_total, silos, mat_labels):
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        self.title = 'Modelo de Mistura de Materiais'
+        self.title = 'Conveyor Blending Model - v0.3'
         self.initUI()
     
     def initUI(self):
@@ -97,11 +97,9 @@ class App(QWidget):
         
         self.t_total_input = QLineEdit(self)
         self.div_lenght_input = QLineEdit(self)
-        self.n_mat_input = QLineEdit(self)
 
         form_layout.addRow("Simulation Time[s]", self.t_total_input)
         form_layout.addRow("Conveyor division[m]", self.div_lenght_input)
-
         sidebar.addLayout(form_layout)
 
         # Tabela para entrada de dados dos silos
@@ -152,6 +150,7 @@ class App(QWidget):
         # Canvas para exibir gráficos
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
+        self.canvas.setSizePolicy(7, 7)
         main_area.addWidget(self.canvas)
         
         # Adiciona a área principal ao layout principal
@@ -175,20 +174,34 @@ class App(QWidget):
         # Obter os valores de entrada da tabela
         silos = []
         for row in range(self.table.rowCount()):
-            capacity = float(self.table.item(row, 1).text())
-            flow = float(self.table.item(row, 2).text())
-            position = tuple(map(int, self.table.item(row, 3).text().split(',')))
-            start = float(self.table.item(row, 4).text())
-            end = float(self.table.item(row, 5).text())
-            material_instance = self.table.item(row,0).text() 
+            capacity = self.table.item(row, 1)
+            if capacity is not None and capacity.text() != '':
+                capacity = float(capacity.text())
+            flow = self.table.item(row, 2)
+            if flow is not None and flow.text() != '':
+                flow = float(flow.text())
+            position = self.table.item(row, 3)
+            if position is not None and position.text() != '':
+                position = tuple(map(int, position.text().split(',')))
+            start = self.table.item(row, 4)
+            if start is not None and start.text() != '':
+                start = float(start.text())
+            end = self.table.item(row, 5)
+            if end is not None and end.text() != '':
+                end = float(end.text())
+            material_instance = self.table.item(row,0)
+            if material_instance is not None and material_instance.text() != '':
+                material_instance = material_instance.text() 
             silo_instance = silo(capacity=capacity, material=material_instance, flow=flow, position=position, start=start, end=end)
             silos.append(silo_instance)
         
         #obter nomes dos materiais 
 
         names_mat = []
-        for row in range(self.table.rowCount()):
-            mat_input = str(self.table_mat.item(row,0).text())
+        for row in range(self.table_mat.rowCount()):
+            mat_input = self.table_mat.item(row,0)
+            if mat_input is not None and mat_input.text() != '':
+                mat_input = str(mat_input.text())
             names_mat.append(mat_input)
 
         n_mat = len(names_mat)
