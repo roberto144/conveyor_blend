@@ -15,6 +15,4 @@ Model describing the conveyor blend dynamics related to blending the materials
 3. Generate an general cycle diagram to shows to the client the charging capacity.
     
 ## Actual Stage 
-generates graphs of % of each material in conveyor belt, starts and end of each silo and flow in conveyor. 
-Is possible to configurate tables for silos and materials
-and set simple variables in the system. 
+Implemented a generated json file to save, load and share cases. 
