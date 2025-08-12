@@ -250,7 +250,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For questions, bug reports, or feature requests:
 - Open an issue on GitHub
-- Contact: your.email@example.com
+- Contact: robertoabreu.alencar@hotmail.com
 
 ## Acknowledgments
 
