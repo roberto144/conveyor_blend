@@ -34,7 +34,7 @@ A modular PyQt5 application for simulating material flow and blending on conveyo
 ### Install from Source
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/conveyor-blending-model.git
+git clone (https://github.com/roberto144/conveyor_blend.git)
 cd conveyor-blending-model
 
 # Install dependencies
