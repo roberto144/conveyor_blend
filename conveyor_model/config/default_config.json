@@ -1,0 +1,18 @@
+{
+  "simulation": {
+    "default_total_time": 100.0,
+    "default_conveyor_length": 100.0,
+    "default_resolution_size": 1.0,
+    "default_conveyor_velocity": 2.0
+  },
+  "ui": {
+    "window_width": 1400,
+    "window_height": 800,
+    "theme": "default"
+  },
+  "materials": {
+    "default_materials": [
+      "Steel", "Aluminum", "Concrete", "Sand", "Gravel", "Coal"
+    ]
+  }
+}
