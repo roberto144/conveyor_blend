@@ -1,0 +1,6009 @@
+# Conveyor Blending Model
+## Comprehensive User Manual
+### Version 1.0 - With Blast Furnace Mode Integration
+
+**Developed by:** Roberto Abreu Alencar  
+**Last Updated:** August 2025  
+**Manual Version:** 1.0  
+
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [System Requirements](#system-requirements)
+3. [Installation Guide](#installation-guide)
+4. [Quick Start Guide](#quick-start-guide)
+5. [User Interface Overview](#user-interface-overview)
+6. [Standard Mode Operation](#standard-mode-operation)
+7. [Blast Furnace Mode Operation](#blast-furnace-mode-operation)
+8. [Advanced Features](#advanced-features)
+9. [File Management](#file-management)
+10. [Export and Reporting](#export-and-reporting)
+11. [Troubleshooting](#troubleshooting)
+12. [Technical Reference](#technical-reference)
+13. [Best Practices](#best-practices)
+14. [Appendices](#appendices)
+
+---
+
+## 1. Introduction
+
+### 1.1 Overview
+
+The Conveyor Blending Model is a comprehensive engineering simulation application designed to model material flow and blending behavior on conveyor belt systems. This software provides engineers and researchers with advanced tools for:
+
+- **Material Flow Simulation**: Model multiple material types flowing simultaneously on conveyor belts
+- **Blending Analysis**: Analyze material mixing patterns and distribution
+- **Chemical Composition Tracking**: Monitor material chemistry in real-time (Blast Furnace Mode)
+- **Process Optimization**: Optimize material feeding strategies and timing
+- **Quality Control**: Predict and control final blend chemistry
+- **Industrial Applications**: Support metallurgical, mining, and manufacturing operations
+
+### 1.2 Key Features
+
+#### Standard Mode Features:
+- Multi-material simulation with configurable properties
+- Adjustable conveyor parameters (length, velocity, resolution)
+- Silo configuration with independent flow rates and timing
+- Real-time visualization of material distribution
+- Mass balance validation and error checking
+- Interactive plotting and analysis tools
+- Case management with save/load functionality
+
+#### Blast Furnace Mode Features:
+- Advanced chemical composition tracking (Fe, SiO2, CaO, MgO, Al2O3)
+- Basicity calculations and monitoring (B2, B4)
+- Weighted average chemistry over time
+- Material stratification visualization in bunkers
+- Discharge prediction and quality control
+- Target range monitoring with quality indicators
+- Comprehensive chemistry reporting and export
+- Industry-standard metallurgical calculations
+
+### 1.3 Application Areas
+
+- **Steel Industry**: Blast furnace burden preparation and optimization
+- **Mining Operations**: Ore blending and quality control
+- **Cement Manufacturing**: Raw material preparation and mixing
+- **Chemical Processing**: Multi-component feed systems
+- **Research and Development**: Material handling studies
+- **Educational Purposes**: Teaching material flow principles
+
+### 1.4 Software Architecture
+
+The application follows a modular design pattern:
+
+```
+Application Layer (PyQt5 GUI)
+    ├── Standard Mode Interface
+    ├── Blast Furnace Mode Interface
+    └── Shared Components
+    
+Simulation Engine
+    ├── Material Flow Calculator
+    ├── Chemistry Tracking System
+    ├── Validation Framework
+    └── Results Processing
+    
+Data Models
+    ├── Material Properties
+    ├── Conveyor Configuration
+    ├── Silo/Bunker Management
+    └── Chemistry Database
+    
+Visualization System
+    ├── Flow Analysis Plots
+    ├── Chemistry Trend Charts
+    ├── Bunker Stratification Views
+    └── Export Functions
+```
+
+---
+
+## 2. System Requirements
+
+### 2.1 Minimum System Requirements
+
+| Component | Requirement |
+|-----------|-------------|
+| **Operating System** | Windows 7+, macOS 10.12+, Linux (Ubuntu 16.04+) |
+| **Python Version** | Python 3.7 or higher |
+| **RAM** | 4 GB minimum |
+| **Available Disk Space** | 500 MB for installation and temporary files |
+| **Display Resolution** | 1024×768 minimum |
+| **Graphics** | OpenGL-compatible graphics card |
+
+### 2.2 Recommended System Requirements
+
+| Component | Recommendation |
+|-----------|----------------|
+| **RAM** | 8 GB or higher |
+| **Display Resolution** | 1400×800 or higher |
+| **Processor** | Multi-core processor (Intel i5 or AMD equivalent) |
+| **Storage** | SSD for improved performance |
+| **Graphics** | Dedicated graphics card for complex visualizations |
+
+### 2.3 Software Dependencies
+
+#### Required Python Packages:
+```
+PyQt5 >= 5.12.0          # GUI framework
+matplotlib >= 3.2.0       # Plotting and visualization
+numpy >= 1.18.0          # Numerical computations
+```
+
+#### Optional Packages (for enhanced functionality):
+```
+pandas >= 1.0.0          # Data analysis and export
+scipy >= 1.4.0           # Scientific computing
+psutil >= 5.7.0          # System monitoring
+```
+
+### 2.4 Performance Guidelines
+
+| Simulation Size | Expected Performance |
+|----------------|---------------------|
+| **Small** (100s, 50m conveyor) | < 2 seconds, ~10MB RAM |
+| **Medium** (300s, 100m conveyor) | < 5 seconds, ~25MB RAM |
+| **Large** (1000s, 200m conveyor) | < 15 seconds, ~80MB RAM |
+| **Extra Large** (3600s, 500m conveyor) | < 60 seconds, ~200MB RAM |
+
+---
+
+## 3. Installation Guide
+
+### 3.1 Pre-Installation Checklist
+
+1. **Verify Python Installation**:
+   ```bash
+   python --version
+   # Should show Python 3.7 or higher
+   ```
+
+2. **Check Package Manager**:
+   ```bash
+   pip --version
+   # Ensure pip is available
+   ```
+
+3. **Verify System Resources**:
+   - Check available disk space (minimum 500 MB)
+   - Ensure sufficient RAM (minimum 4 GB)
+
+### 3.2 Step-by-Step Installation
+
+#### Step 1: Create Virtual Environment (Recommended)
+```bash
+# Create virtual environment
+python -m venv conveyor_env
+
+# Activate virtual environment
+# On Windows:
+conveyor_env\Scripts\activate
+# On macOS/Linux:
+source conveyor_env/bin/activate
+```
+
+#### Step 2: Install Required Packages
+```bash
+# Install core dependencies
+pip install PyQt5>=5.12.0
+pip install matplotlib>=3.2.0
+pip install numpy>=1.18.0
+
+# Install optional packages
+pip install pandas>=1.0.0
+pip install scipy>=1.4.0
+pip install psutil>=5.7.0
+```
+
+#### Step 3: Download Application Files
+```bash
+# Extract application files to desired directory
+cd /path/to/installation/directory
+# Verify file structure (see section 3.3)
+```
+
+#### Step 4: Verify Installation
+```bash
+# Test launch
+python main.py
+```
+
+### 3.3 File Structure Verification
+
+Ensure the following directory structure exists:
+
+```
+ConveyorBlendingModel/
+├── main.py                     # Application entry point
+├── config/
+│   └── default_config.json     # Configuration file
+├── src/
+│   ├── ui/
+│   │   ├── main_window.py       # Main application window
+│   │   ├── widgets/
+│   │   │   ├── input_widgets.py
+│   │   │   ├── table_widgets.py
+│   │   │   ├── plot_widgets.py
+│   │   │   └── bf_integration.py
+│   │   └── dialogs/
+│   │       └── error_dialog.py
+│   ├── simulation/
+│   │   ├── engine.py
+│   │   ├── calculator.py
+│   │   ├── validator.py
+│   │   └── bf_bunker_viz.py
+│   ├── models/
+│   │   ├── material.py
+│   │   ├── silo.py
+│   │   ├── conveyor.py
+│   │   └── simulation_data.py
+│   ├── utils/
+│   │   ├── config.py
+│   │   ├── file_handler.py
+│   │   └── exceptions.py
+│   └── visualization/
+│       └── plotter.py
+├── tests/                      # Optional test files
+├── docs/                       # Documentation
+├── examples/                   # Example cases
+└── README.md
+```
+
+### 3.4 First Launch Configuration
+
+1. **Launch Application**:
+   ```bash
+   python main.py
+   ```
+
+2. **Verify Default Settings**:
+   - Window opens with Standard Mode active
+   - Default materials are loaded
+   - Configuration file is created automatically
+
+3. **Test Basic Functionality**:
+   - Create a simple simulation (see Quick Start Guide)
+   - Verify plots are generated
+   - Test save/load functionality
+
+### 3.5 Troubleshooting Installation Issues
+
+#### Common Installation Problems:
+
+**Issue**: `ImportError: No module named PyQt5`
+**Solution**:
+```bash
+pip install --upgrade PyQt5
+# Or if using conda:
+conda install pyqt
+```
+
+**Issue**: `matplotlib backend error`
+**Solution**:
+```bash
+# Install additional backends
+pip install PyQt5-tools
+# Set backend in code or config
+```
+
+**Issue**: Permission denied errors
+**Solution**:
+```bash
+# Run with elevated privileges or check file permissions
+chmod +x main.py  # On Unix systems
+```
+
+**Issue**: Application won't start
+**Solution**:
+1. Check console output for specific errors
+2. Verify all dependencies are installed
+3. Ensure Python path is correct
+4. Check file structure completeness
+
+---
+
+## 4. Quick Start Guide
+
+### 4.1 Basic Workflow Overview
+
+```mermaid
+graph TD
+    A[Launch Application] --> B[Choose Mode]
+    B --> C[Standard Mode]
+    B --> D[Blast Furnace Mode]
+    C --> E[Define Materials]
+    D --> F[Define Materials with Chemistry]
+    E --> G[Configure Silos]
+    F --> H[Configure Bunkers]
+    G --> I[Set Parameters]
+    H --> I
+    I --> J[Run Simulation]
+    J --> K[Analyze Results]
+    K --> L[Export/Save]
+```
+
+### 4.2 First Simulation (Standard Mode)
+
+#### Step 1: Launch and Setup
+1. Start the application: `python main.py`
+2. Verify Standard Mode is active (default)
+3. Note the interface layout: input panel (left), results (right)
+
+#### Step 2: Define Materials
+1. In the Materials table, you'll see default materials:
+   - Lump Ore
+   - Sinter
+   - Pellet
+   - Dolomite
+   - Limestone
+   - Nut Coke
+   - Quartz
+
+2. You can add materials by clicking "Add Material"
+3. Or modify existing materials by double-clicking cells
+
+#### Step 3: Configure Basic Parameters
+Set the following in the Input Panel:
+- **Simulation Time**: 150 seconds
+- **Conveyor Length**: 50 meters
+- **Resolution Size**: 1.0 meter
+- **Conveyor Velocity**: 2.0 m/s
+
+#### Step 4: Configure Silos
+Add 3 silos with these settings:
+
+| Material | Capacity (kg) | Flow (kg/s) | Material Position | Silo Position | Start Time (s) |
+|----------|---------------|-------------|-------------------|---------------|----------------|
+| Lump Ore | 1000 | 5.0 | 0 | 10 | 0 |
+| Sinter | 800 | 4.0 | 1 | 20 | 15 |
+| Limestone | 500 | 2.5 | 4 | 30 | 30 |
+
+#### Step 5: Run Simulation
+1. Press **F5** or click "Run Simulation"
+2. Watch the progress bar
+3. Review the completion summary
+
+#### Step 6: Analyze Results
+The right panel will show 4 plots:
+- **Material Flows**: Individual material flow rates over time
+- **Material Proportions**: Stacked area chart showing blend percentages
+- **Total Flow Rate**: Combined flow from all materials
+- **Silo Timeline**: Gantt chart of silo operations
+
+### 4.3 First BF Mode Simulation
+
+#### Step 1: Enable Blast Furnace Mode
+1. Go to menu: **Blast Furnace → Enable BF Mode**
+2. Window title changes to include "[BLAST FURNACE MODE]"
+3. Interface switches to BF Mode tab
+
+#### Step 2: Load BF Materials
+1. Go to menu: **Blast Furnace → Load BF Material Presets**
+2. Verify materials table shows chemistry data:
+   - Pellets (65.5% Fe)
+   - Sinter (57.2% Fe)
+   - Lump Ore (62.0% Fe)
+   - Coke
+   - Limestone (flux)
+   - Dolomite (flux)
+   - Quartzite
+
+#### Step 3: Configure BF Parameters
+Same as standard mode:
+- **Simulation Time**: 150 seconds
+- **Conveyor Length**: 50 meters
+- **Resolution Size**: 1.0 meter
+- **Conveyor Velocity**: 2.0 m/s
+
+#### Step 4: Configure BF Bunkers
+Add bunkers for blast furnace materials:
+
+| Material | Volume (m³) | Flow (t/h) | Material Position | Bunker Position | Start Time (s) |
+|----------|-------------|------------|-------------------|-----------------|----------------|
+| Pellets | 50 | 10 | 0 | 5 | 0 |
+| Sinter | 40 | 8 | 1 | 15 | 20 |
+| Limestone | 15 | 3 | 4 | 25 | 40 |
+
+#### Step 5: Run BF Simulation
+1. Press **F5**
+2. Status shows "Running simulation (BF Mode)..."
+3. Enhanced summary includes chemistry information
+
+#### Step 6: Analyze BF Results
+Two result tabs are available:
+1. **Flow Analysis**: Standard flow plots
+2. **Chemistry Trends**: 6 time-series plots showing:
+   - Fe Content Over Time
+   - SiO2 Content Over Time
+   - CaO Content Over Time
+   - MgO Content Over Time
+   - Al2O3 Content Over Time
+   - Basicity (CaO/SiO2) Over Time
+
+### 4.4 Understanding the Results
+
+#### Flow Analysis Plots (Both Modes):
+- **Material Flows**: Shows kg/s for each material at conveyor end
+- **Proportions**: Shows percentage contribution of each material
+- **Total Flow**: Shows combined flow rate
+- **Timeline**: Shows when each silo is active
+
+#### Chemistry Trends (BF Mode Only):
+- **Lines show weighted averages** based on material flow rates
+- **Target ranges** are highlighted in color bands
+- **Quality indicators** help assess chemistry stability
+- **Basicity monitoring** ensures proper CaO/SiO2 ratio
+
+### 4.5 Common Beginner Mistakes
+
+1. **Overlapping Silo Positions**: Avoid placing silos at same position
+2. **Missing Materials**: Ensure all silos reference defined materials
+3. **Zero Flow Rates**: Check that flow rates are positive
+4. **Short Simulation Time**: Allow enough time for all silos to operate
+5. **Large Resolution**: Smaller resolution gives better accuracy
+
+---
+
+## 5. User Interface Overview
+
+### 5.1 Main Window Layout
+
+The application features a modern, intuitive interface designed for efficient workflow:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ File  Simulation  Blast Furnace  Help                          │
+├─────────────────────────────────────────────────────────────────┤
+│ ┌─────────────────┐ ┌─────────────────────────────────────────┐ │
+│ │                 │ │                                         │ │
+│ │   Input Panel   │ │         Results Panel                   │ │
+│ │                 │ │                                         │ │
+│ │ • Parameters    │ │  ┌─────────────────────────────────────┐│ │
+│ │ • Materials     │ │  │                                     ││ │
+│ │ • Silos/Bunkers │ │  │         Plots Area                  ││ │
+│ │                 │ │  │                                     ││ │
+│ │                 │ │  │  • Flow Analysis (Standard)         ││ │
+│ │                 │ │  │  • Chemistry Trends (BF Mode)      ││ │
+│ │                 │ │  │                                     ││ │
+│ │                 │ │  └─────────────────────────────────────┘│ │
+│ └─────────────────┘ └─────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│ Status: Ready                                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 5.2 Menu System
+
+#### File Menu
+- **New (Ctrl+N)**: Create new case, clears all current work
+- **Open (Ctrl+O)**: Load previously saved case
+- **Save (Ctrl+S)**: Save current case to file
+- **Save As (Ctrl+Shift+S)**: Save with new filename
+- **Exit (Ctrl+Q)**: Close application
+
+#### Simulation Menu
+- **Run Simulation (F5)**: Execute current simulation setup
+
+#### Blast Furnace Menu (BF Mode)
+- **Enable BF Mode**: Toggle between Standard and BF modes
+- **Bunker Chemistry Visualization**: Open advanced bunker window
+- **Load BF Material Presets**: Load default metallurgical materials
+- **Export Chemistry Report**: Generate comprehensive chemistry analysis
+
+#### Help Menu
+- **About**: Application information and version
+- **BF Mode Guide**: Detailed guide for blast furnace features
+
+### 5.3 Input Panel (Left Side)
+
+#### Mode Tabs
+- **Standard Mode Tab**: Traditional material flow simulation
+- **Blast Furnace Mode Tab**: Enhanced chemistry tracking
+
+#### Standard Mode Components:
+
+**Simulation Parameters Group:**
+- Total Time: Duration of simulation (seconds)
+- Conveyor Length: Physical length of belt (meters)
+- Resolution Size: Spatial discretization (meters)
+- Conveyor Velocity: Belt speed (m/s)
+
+**Materials Table:**
+- Simple list of material names
+- Add/Remove functionality
+- Default materials pre-loaded
+
+**Silos Table:**
+- Material selection dropdown
+- Capacity in kg
+- Flow rate in kg/s
+- Material position (matrix index)
+- Silo position on conveyor (meters)
+- Start time for discharge
+
+#### BF Mode Components:
+
+**Enhanced Materials Table:**
+- Material name
+- Chemistry composition (Fe%, SiO2%, CaO%, MgO%, Al2O3%)
+- Bulk density (kg/m³)
+- Color for visualization
+
+**Bunkers Table:**
+- Similar to silos but with volume units (m³)
+- Flow rates in t/h (tons per hour)
+- Enhanced for metallurgical operations
+
+### 5.4 Results Panel (Right Side)
+
+#### Standard Mode Results:
+
+**Four-Plot Layout:**
+1. **Top Left**: Material flows over time (line plot)
+2. **Bottom Left**: Material proportions (stacked area)
+3. **Top Right**: Total flow rate (line plot)
+4. **Bottom Right**: Silo operation timeline (Gantt chart)
+
+#### BF Mode Results:
+
+**Two-Tab System:**
+
+**Flow Analysis Tab:** Same as standard mode
+
+**Chemistry Trends Tab:** Six chemistry plots:
+1. **Fe Content**: Red line with target range (58-66%)
+2. **SiO2 Content**: Blue line with target range (4-8%)
+3. **CaO Content**: Green line with typical range
+4. **MgO Content**: Purple line with target range (0.5-3%)
+5. **Al2O3 Content**: Orange line with target range (1-3%)
+6. **Basicity (B2)**: Purple line with target at 1.1
+
+### 5.5 Status and Progress Indicators
+
+#### Status Bar
+- Shows current application state
+- Displays operation feedback
+- Mode indicator (Standard/BF Mode)
+
+#### Progress Bar
+- Appears during simulation execution
+- Shows indeterminate progress for simulation
+- Disappears when operation completes
+
+#### Visual Feedback
+- Button states change during operations
+- Window title reflects current mode
+- Color coding for different data types
+
+### 5.6 Interactive Features
+
+#### Plot Interaction
+- **Zoom**: Mouse wheel or toolbar zoom
+- **Pan**: Click and drag to move view
+- **Reset**: Double-click to reset view
+- **Export**: Right-click for save options
+
+#### Table Editing
+- **Cell Editing**: Double-click to edit values
+- **Row Selection**: Click row header
+- **Dropdown Menus**: For material selection
+- **Validation**: Real-time input checking
+
+#### Window Management
+- **Resizable**: Drag window edges
+- **Splitter Control**: Adjust panel proportions
+- **Tab Switching**: Click tabs or use keyboard
+
+---
+
+## 6. Standard Mode Operation
+
+### 6.1 Overview of Standard Mode
+
+Standard Mode provides the core functionality for material flow simulation on conveyor belts. This mode is ideal for:
+
+- Basic material blending studies
+- Conveyor system design
+- Flow rate optimization
+- Educational purposes
+- Initial system analysis
+
+### 6.2 Setting Up Simulation Parameters
+
+#### 6.2.1 Simulation Time
+**Purpose**: Defines the total duration of the simulation
+**Range**: 0.1 to 86,400 seconds (24 hours)
+**Recommendations**:
+- Short simulations (50-150s): Initial testing and verification
+- Medium simulations (300-600s): Steady-state analysis
+- Long simulations (1800-3600s): Long-term behavior studies
+
+**Guidelines**:
+```
+Simulation Time = (Longest Silo Runtime) + (2 × Conveyor Travel Time)
+Conveyor Travel Time = Conveyor Length / Conveyor Velocity
+```
+
+#### 6.2.2 Conveyor Length
+**Purpose**: Physical length of the conveyor belt system
+**Range**: 1.0 to 10,000 meters
+**Typical Values**:
+- Laboratory scale: 5-20 meters
+- Industrial scale: 50-500 meters
+- Long-distance transport: 1000+ meters
+
+#### 6.2.3 Resolution Size
+**Purpose**: Spatial discretization for simulation accuracy
+**Range**: 0.1 to 10.0 meters
+**Impact on Performance**:
+- Smaller values = Higher accuracy, longer computation time
+- Larger values = Lower accuracy, faster computation
+
+**Selection Guidelines**:
+```
+Resolution Size ≤ Conveyor Length / 50   (for good accuracy)
+Resolution Size ≤ Minimum Silo Spacing / 2   (to avoid overlap)
+```
+
+#### 6.2.4 Conveyor Velocity
+**Purpose**: Speed of the conveyor belt
+**Range**: 0.1 to 50.0 m/s
+**Typical Industrial Values**:
+- Mining operations: 1-4 m/s
+- Manufacturing: 0.5-2 m/s
+- High-speed transport: 5-15 m/s
+
+### 6.3 Material Configuration
+
+#### 6.3.1 Default Materials
+The application comes with pre-loaded materials suitable for various industries:
+
+| Material | Industry Application | Typical Properties |
+|----------|---------------------|-------------------|
+| Lump Ore | Steel, Mining | High density, irregular shape |
+| Sinter | Steel production | Processed ore, uniform size |
+| Pellet | Steel production | Spherical, consistent flow |
+| Dolomite | Steel, Chemical | Flux material, moderate density |
+| Limestone | Steel, Cement | Flux material, fine particles |
+| Nut Coke | Steel production | Fuel, irregular shape |
+| Quartz | Glass, Chemical | High purity silica |
+
+#### 6.3.2 Adding Custom Materials
+1. Click **"Add Material"** button
+2. Double-click the new row to edit
+3. Enter descriptive material name
+4. Verify the material appears in silo dropdown
+
+#### 6.3.3 Material Naming Best Practices
+- Use descriptive names (e.g., "Iron_Ore_65Fe" instead of "Material1")
+- Avoid spaces in names (use underscores)
+- Include key properties in name when relevant
+- Maintain consistent naming convention
+
+### 6.4 Silo Configuration
+
+#### 6.4.1 Silo Parameters Explained
+
+**Material**: Select from defined materials list
+**Capacity (kg)**: Total amount of material in silo
+- Range: 1.0 to 999,999 kg
+- Consider realistic industrial capacities
+- Affects total simulation runtime
+
+**Flow Rate (kg/s)**: Material discharge rate
+- Range: 0.01 to 1,000 kg/s
+- Determines feed intensity
+- Must be positive value
+
+**Material Position**: Index in material matrix
+- Automatically assigned based on material selection
+- Links silo to specific material type
+- Used for results organization
+
+**Silo Position**: Physical location on conveyor (meters)
+- Range: 0 to conveyor length
+- Determines where material enters conveyor
+- Multiple silos can have same position (blending point)
+
+**Start Time (s)**: When silo begins discharging
+- Range: 0 to simulation time
+- Allows staged material introduction
+- Enables complex feeding strategies
+
+#### 6.4.2 Silo Configuration Examples
+
+**Example 1: Continuous Operation**
+```
+Material: Lump_Ore, Capacity: 5000kg, Flow: 10kg/s, Position: 10m, Start: 0s
+Material: Limestone, Capacity: 1000kg, Flow: 2kg/s, Position: 10m, Start: 0s
+Result: Continuous blending from simulation start
+```
+
+**Example 2: Staged Introduction**
+```
+Material: Base_Material, Capacity: 3000kg, Flow: 8kg/s, Position: 5m, Start: 0s
+Material: Additive_1, Capacity: 500kg, Flow: 1kg/s, Position: 15m, Start: 30s
+Material: Additive_2, Capacity: 300kg, Flow: 0.5kg/s, Position: 25m, Start: 60s
+Result: Base material followed by sequential additives
+```
+
+**Example 3: Multiple Feed Points**
+```
+Material: Primary, Capacity: 4000kg, Flow: 12kg/s, Position: 5m, Start: 0s
+Material: Primary, Capacity: 4000kg, Flow: 12kg/s, Position: 20m, Start: 10s
+Material: Primary, Capacity: 4000kg, Flow: 12kg/s, Position: 35m, Start: 20s
+Result: Distributed feeding of same material
+```
+
+### 6.5 Running Standard Mode Simulations
+
+#### 6.5.1 Pre-Simulation Checklist
+- [ ] At least one material defined
+- [ ] At least one silo configured
+- [ ] All silo positions within conveyor length
+- [ ] Flow rates are positive
+- [ ] Simulation time allows silo completion
+- [ ] Resolution size is appropriate
+
+#### 6.5.2 Simulation Execution
+1. **Validation Phase**: System checks all parameters
+2. **Initialization**: Creates material matrices and data structures
+3. **Simulation Loop**: Processes each time step
+4. **Results Generation**: Calculates flows and proportions
+5. **Visualization**: Updates plots and displays
+
+#### 6.5.3 Simulation Progress Monitoring
+- Progress bar shows activity
+- Status bar displays current operation
+- Console output available for debugging
+- Simulation can be interrupted if needed
+
+### 6.6 Understanding Standard Mode Results
+
+#### 6.6.1 Material Flows Plot
+**Purpose**: Shows individual material flow rates over time
+**Interpretation**:
+- Each line represents one material
+- Y-axis: Flow rate (kg/s)
+- X-axis: Time (seconds)
+- Peak flows occur when silos are active
+- Zero flow when silo is empty or not started
+
+**Key Observations**:
+- Steady flow indicates constant discharge rate
+- Step changes show silo start/stop events
+- Multiple peaks show multiple silos of same material
+
+#### 6.6.2 Material Proportions Plot
+**Purpose**: Shows percentage contribution of each material over time
+**Interpretation**:
+- Stacked area chart with total = 100%
+- Colors match material flows plot
+- Shows relative contribution of each material
+- Useful for blend ratio analysis
+
+**Key Observations**:
+- Dominant materials appear as large areas
+- Proportion changes show feeding strategy effects
+- Steady proportions indicate stable blending
+
+#### 6.6.3 Total Flow Rate Plot
+**Purpose**: Shows combined flow from all materials
+**Interpretation**:
+- Single line showing sum of all material flows
+- Peaks show maximum system throughput
+- Valleys show reduced or zero flow periods
+- Useful for capacity planning
+
+**Key Observations**:
+- Maximum flow determines system bottlenecks
+- Flow patterns reflect feeding strategy
+- Zero flow indicates gaps in material supply
+
+#### 6.6.4 Silo Operation Timeline
+**Purpose**: Gantt chart showing when each silo operates
+**Interpretation**:
+- Each bar represents one silo
+- Bar length shows operation duration
+- Bar position shows start time
+- Different colors show different materials
+
+**Key Observations**:
+- Overlapping bars show simultaneous operation
+- Gaps show periods with no material flow
+- Bar length indicates silo capacity/flow ratio
+
+### 6.7 Standard Mode Applications
+
+#### 6.7.1 Blend Optimization
+Use Standard Mode to:
+- Test different material ratios
+- Optimize feeding sequences
+- Minimize composition variation
+- Maximize throughput efficiency
+
+#### 6.7.2 System Design
+Evaluate:
+- Conveyor length requirements
+- Silo positioning strategies
+- Flow rate capabilities
+- Timing coordination
+
+#### 6.7.3 Operational Planning
+Plan:
+- Material inventory requirements
+- Feeding schedules
+- Maintenance windows
+- Production campaigns
+
+#### 6.7.4 Educational Applications
+Demonstrate:
+- Material flow principles
+- Mixing behavior
+- System dynamics
+- Process optimization concepts
+
+---
+
+## 7. Blast Furnace Mode Operation
+
+### 7.1 Overview of Blast Furnace Mode
+
+Blast Furnace Mode extends the application with advanced metallurgical capabilities specifically designed for iron and steel production. This mode adds:
+
+- **Chemical Composition Tracking**: Monitor Fe, SiO2, CaO, MgO, Al2O3 content
+- **Basicity Calculations**: Real-time B2 and B4 basicity monitoring
+- **Quality Control**: Target ranges and stability indicators
+- **Industry Standards**: Metallurgical calculations and best practices
+- **Advanced Visualization**: Bunker stratification and chemistry trends
+
+### 7.2 Enabling Blast Furnace Mode
+
+#### 7.2.1 Mode Activation
+1. Go to menu: **Blast Furnace → Enable BF Mode**
+2. **Visual Changes**:
+   - Window title adds "[BLAST FURNACE MODE]"
+   - Interface switches to "Blast Furnace Mode" tab
+   - Status bar shows "Blast Furnace Mode Enabled"
+   - BF menu items become active
+
+#### 7.2.2 Mode Differences
+**Standard Mode**:
+- Basic material names only
+- Simple flow calculations
+- Generic flow analysis plots
+
+**Blast Furnace Mode**:
+- Detailed chemistry database
+- Weighted average calculations
+- Chemistry trend analysis
+- Industry-specific features
+
+### 7.3 Material Chemistry Configuration
+
+#### 7.3.1 Loading Default BF Materials
+1. Go to menu: **Blast Furnace → Load BF Material Presets**
+2. **Default Materials Loaded**:
+
+| Material | Fe% | SiO2% | CaO% | MgO% | Al2O3% | Density (kg/m³) | Application |
+|----------|-----|-------|------|------|--------|----------------|-------------|
+| Pellets | 65.5 | 4.2 | 0.5 | 0.3 | 0.8 | 2200 | High-grade iron source |
+| Sinter | 57.2 | 9.8 | 9.5 | 1.2 | 1.8 | 1900 | Processed iron ore |
+| Lump Ore | 62.0 | 6.5 | 0.2 | 0.1 | 2.1 | 2500 | Natural iron ore |
+| Coke | 0.5 | 5.5 | 0.3 | 0.1 | 2.8 | 500 | Fuel and reducing agent |
+| Limestone | 0.5 | 2.0 | 52.0 | 2.5 | 0.8 | 1600 | Flux for basicity control |
+| Dolomite | 0.3 | 1.5 | 30.0 | 20.0 | 0.5 | 1700 | MgO source flux |
+| Quartzite | 0.2 | 95.0 | 0.5 | 0.1 | 2.0 | 1650 | SiO2 adjustment |
+
+#### 7.3.2 Understanding Material Chemistry
+
+**Iron Content (Fe%)**:
+- Primary indicator of iron ore quality
+- Target range: 58-66% for furnace feed
+- Higher Fe content improves furnace productivity
+- Pellets typically have highest Fe content
+
+**Silica Content (SiO2%)**:
+- Forms slag with fluxes
+- Target range: 4-8% in furnace burden
+- Must be balanced with CaO for proper basicity
+- Quartzite used for SiO2 adjustment
+
+**Lime Content (CaO%)**:
+- Essential for slag formation
+- Controls basicity (CaO/SiO2 ratio)
+- Target basicity: 1.0-1.2
+- Limestone and sinter are main CaO sources
+
+**Magnesia Content (MgO%)**:
+- Improves slag fluidity
+- Protects furnace refractory
+- Target range: 0.5-3%
+- Dolomite is primary MgO source
+
+**Alumina Content (Al2O3%)**:
+- Affects slag viscosity
+- Should be controlled within limits
+- Target range: 1-3%
+- High Al2O3 can cause operational problems
+
+#### 7.3.3 Adding Custom BF Materials
+
+1. **Click "Add Material"** in materials table
+2. **Enter Material Properties**:
+   - Descriptive name (e.g., "High_Grade_Pellets")
+   - Chemistry values (Fe%, SiO2%, CaO%, MgO%, Al2O3%)
+   - Bulk density (kg/m³)
+   - Color for visualization (hex code)
+
+3. **Validation Rules**:
+   - Fe content: 0-70%
+   - Other oxides: 0-100%
+   - Total chemistry should be reasonable (sum < 100%)
+   - Density: 500-3000 kg/m³ for typical materials
+
+#### 7.3.4 Material Quality Assessment
+
+**Quality Indicators**:
+- **Premium Grade**: Fe > 65%, SiO2 < 5%
+- **Standard Grade**: Fe 58-65%, SiO2 5-8%
+- **Low Grade**: Fe < 58%, SiO2 > 8%
+
+**Basicity Calculation**:
+```
+Binary Basicity (B2) = CaO% / SiO2%
+Quaternary Basicity (B4) = (CaO% + MgO%) / (SiO2% + Al2O3%)
+```
+
+### 7.4 Bunker Configuration for BF Mode
+
+#### 7.4.1 Bunker vs. Silo Terminology
+**Standard Mode**: Uses "silos" with kg units
+**BF Mode**: Uses "bunkers" with volume units (m³)
+
+**Conversion**:
+```
+Mass (kg) = Volume (m³) × Density (kg/m³)
+Flow Rate (kg/s) = Flow Rate (t/h) × 1000 / 3600
+```
+
+#### 7.4.2 Typical BF Bunker Configuration
+
+**Example Burden Distribution**:
+- **Iron-bearing materials**: 70-80% (Pellets, Sinter, Lump Ore)
+- **Flux materials**: 15-25% (Limestone, Dolomite)
+- **Additives**: 5-10% (Quartzite, special additives)
+
+**Sample BF Bunker Setup**:
+
+| Material | Volume (m³) | Flow (t/h) | Position | Start Time | Purpose |
+|----------|-------------|------------|----------|------------|---------|
+| Pellets | 80 | 120 | 5m | 0s | Primary iron source |
+| Sinter | 60 | 90 | 15m | 0s | Secondary iron source |
+| Lump Ore | 40 | 60 | 25m | 30s | Iron ore supplement |
+| Limestone | 25 | 30 | 35m | 0s | Basicity control |
+| Dolomite | 15 | 18 | 40m | 60s | MgO source |
+
+#### 7.4.3 Bunker Sequencing Strategies
+
+**Strategy 1: Continuous Blending**
+- All bunkers start simultaneously
+- Maintains steady chemistry
+- Simplest control strategy
+
+**Strategy 2: Staged Introduction**
+- Base materials first
+- Fluxes added to control chemistry
+- Allows chemistry adjustment
+
+**Strategy 3: Campaign Charging**
+- Different material combinations for different periods
+- Optimizes furnace performance
+- Requires careful planning
+
+### 7.5 Running BF Mode Simulations
+
+#### 7.5.1 BF-Specific Validation
+Additional checks for BF Mode:
+- Chemistry data completeness
+- Reasonable basicity values (0.5-3.0)
+- Realistic flow rates for BF operations
+- Material compatibility
+
+#### 7.5.2 Enhanced Simulation Process
+1. **Standard Flow Calculation**: Same as Standard Mode
+2. **Chemistry Tracking**: Weighted averages calculated
+3. **Basicity Monitoring**: Real-time B2 and B4 calculation
+4. **Quality Assessment**: Stability and target compliance
+5. **Enhanced Results**: Chemistry trends and statistics
+
+#### 7.5.3 BF Simulation Performance
+**Memory Usage**: 20-50% higher than Standard Mode
+**Computation Time**: 10-30% longer due to chemistry calculations
+**Result Size**: Larger due to chemistry time series data
+
+### 7.6 Understanding BF Mode Results
+
+#### 7.6.1 Chemistry Trends Overview
+BF Mode provides 6 time-series plots showing weighted average chemistry at the conveyor discharge point:
+
+**Plot Layout**: 2×3 grid for comprehensive chemistry monitoring
+
+#### 7.6.2 Fe Content Trends
+**Plot Characteristics**:
+- Red line showing Fe% over time
+- Target range highlighted (58-66%)
+- Quality indicator based on stability
+
+**Interpretation**:
+- Steady line indicates consistent iron grade
+- Variations show impact of different materials
+- Target range compliance critical for furnace operation
+
+**Quality Criteria**:
+- **Good**: Fe content stable within ±2%
+- **Poor**: High variation or outside target range
+
+#### 7.6.3 SiO2 Content Trends
+**Plot Characteristics**:
+- Blue line showing SiO2% over time
+- Target range highlighted (4-8%)
+- Affects basicity calculations
+
+**Interpretation**:
+- Lower SiO2 generally preferred
+- Must be balanced with CaO for proper basicity
+- High SiO2 requires more flux addition
+
+#### 7.6.4 CaO Content Trends
+**Plot Characteristics**:
+- Green line showing CaO% over time
+- Typical range indicated
+- Key component for basicity control
+
+**Interpretation**:
+- CaO level affects slag formation
+- Must be sufficient for target basicity
+- Limestone addition increases CaO
+
+#### 7.6.5 MgO Content Trends
+**Plot Characteristics**:
+- Purple line showing MgO% over time
+- Target range highlighted (0.5-3%)
+- Important for refractory protection
+
+**Interpretation**:
+- MgO improves slag fluidity
+- Protects furnace lining
+- Dolomite is primary source
+
+#### 7.6.6 Al2O3 Content Trends
+**Plot Characteristics**:
+- Orange line showing Al2O3% over time
+- Target range highlighted (1-3%)
+- Affects slag properties
+
+**Interpretation**:
+- High Al2O3 increases slag viscosity
+- Should be controlled within limits
+- Can cause operational difficulties
+
+#### 7.6.7 Basicity (B2) Trends
+**Plot Characteristics**:
+- Purple line showing CaO/SiO2 ratio
+- Target line at B2 = 1.1
+- Acceptable range (1.0-1.2) highlighted
+
+**Interpretation**:
+- Critical parameter for BF operation
+- B2 = 1.1 is typical target
+- Deviations affect slag formation and furnace performance
+
+**Quality Assessment**:
+- **Good**: Average B2 within 1.0-1.2, low variation
+- **Poor**: Outside target range or high instability
+
+### 7.7 Bunker Chemistry Visualization
+
+#### 7.7.1 Opening Bunker Window
+1. Go to menu: **Blast Furnace → Bunker Chemistry Visualization**
+2. New window opens with bunker simulation tools
+3. Independent of main simulation window
+
+#### 7.7.2 Bunker Window Components
+
+**Left Panel**:
+- Materials definition (linked to main window)
+- Charging sequence builder
+- Bunker parameters (diameter, height)
+
+**Right Panel**:
+- Material stratification visualization
+- Layer chemistry display
+- Update and export controls
+
+#### 7.7.3 Charging Sequence Simulation
+1. **Select Material**: Choose from chemistry database
+2. **Set Volume**: Enter m³ of material to add
+3. **Add to Sequence**: Build charging timeline
+4. **Run Charging**: Execute sequence and visualize layers
+
+#### 7.7.4 Bunker Visualization Features
+- **Layer Stratification**: Visual representation of material layers
+- **Chemistry Labels**: Fe% and volume for each layer
+- **Color Coding**: Different colors for different materials
+- **Fill Level**: Percentage fill indicator
+- **Discharge Prediction**: Chemistry of next charges
+
+### 7.8 BF Mode Quality Control
+
+#### 7.8.1 Real-Time Monitoring
+The chemistry trends provide real-time feedback on:
+- **Composition Stability**: Variation in key elements
+- **Target Compliance**: Adherence to desired ranges
+- **Trend Detection**: Early warning of deviations
+- **Quality Prediction**: Forecast of blend properties
+
+#### 7.8.2 Quality Indicators
+
+**Fe Content Stability**:
+- Standard deviation < 2.0% = Good
+- Standard deviation ≥ 2.0% = Poor
+
+**Basicity Control**:
+- Average B2 within 1.0-1.2 = Good
+- Average B2 outside range = Poor
+
+**Overall Assessment**:
+- All indicators Good = Excellent operation
+- Mixed indicators = Acceptable operation
+- Multiple Poor indicators = Requires attention
+
+#### 7.8.3 Corrective Actions
+
+**High Fe Variation**:
+- Check material quality consistency
+- Adjust feeding sequence
+- Consider blending strategies
+
+**Basicity Too Low (< 1.0)**:
+- Increase limestone flow
+- Reduce quartzite addition
+- Add high-CaO materials
+
+**Basicity Too High (> 1.2)**:
+- Reduce limestone flow
+- Add SiO2-bearing materials
+- Adjust material proportions
+
+### 7.9 Advanced BF Applications
+
+#### 7.9.1 Burden Optimization
+Use BF Mode to:
+- Optimize material proportions
+- Minimize chemistry variation
+- Target specific basicity ranges
+- Reduce flux consumption
+
+#### 7.9.2 Process Control
+Implement:
+- Feed-forward control strategies
+- Chemistry prediction models
+- Quality monitoring systems
+- Automated burden adjustment
+
+#### 7.9.3 Operational Planning
+Plan:
+- Material procurement strategies
+- Inventory management
+- Campaign scheduling
+- Quality assurance protocols
+
+---
+
+## 8. Advanced Features
+
+### 8.1 Simulation Optimization
+
+#### 8.1.1 Parameter Sensitivity Analysis
+Understanding how different parameters affect results:
+
+**Conveyor Velocity Impact**:
+- Higher velocity → shorter residence time
+- Lower velocity → more blending opportunity
+- Optimal velocity balances throughput and mixing
+
+**Resolution Size Effects**:
+- Smaller resolution → higher accuracy, longer computation
+- Larger resolution → faster computation, potential accuracy loss
+- Rule of thumb: Resolution ≤ Conveyor Length / 50
+
+**Material Flow Rate Optimization**:
+```
+Optimal Flow Rate = Target Throughput / Number of Active Silos
+Consider: Material availability, silo capacity, feeding constraints
+```
+
+#### 8.1.2 Multi-Scenario Analysis
+**Scenario Planning Workflow**:
+1. Create base case simulation
+2. Save as reference case
+3. Modify one parameter at a time
+4. Document results and compare
+5. Identify optimal configuration
+
+**Example Scenarios**:
+- Different material proportions (70/30 vs 80/20)
+- Various feeding sequences (simultaneous vs staged)
+- Alternative conveyor speeds (1.5 vs 2.0 vs 2.5 m/s)
+- Different silo positioning strategies
+
+#### 8.1.3 Design of Experiments (DOE)
+**Systematic Parameter Variation**:
+
+| Run | Velocity (m/s) | Material Ratio | Start Delay (s) | Result Quality |
+|-----|----------------|----------------|-----------------|----------------|
+| 1 | 1.5 | 70/30 | 0 | Baseline |
+| 2 | 2.0 | 70/30 | 0 | +10% throughput |
+| 3 | 2.5 | 70/30 | 0 | +15% throughput |
+| 4 | 2.0 | 80/20 | 0 | Different chemistry |
+| 5 | 2.0 | 70/30 | 30 | Improved mixing |
+
+### 8.2 Data Analysis and Statistics
+
+#### 8.2.1 Statistical Analysis Tools
+
+**Built-in Statistics** (BF Mode):
+- Mean values for all chemistry components
+- Standard deviations (stability indicators)
+- Minimum and maximum values
+- Quality indicators based on industry standards
+
+**Advanced Analysis** (Manual calculation):
+```
+Coefficient of Variation = (Standard Deviation / Mean) × 100%
+< 5% = Excellent stability
+5-10% = Good stability
+> 10% = Poor stability
+```
+
+#### 8.2.2 Trend Analysis
+
+**Moving Averages**:
+- Smooth short-term fluctuations
+- Identify long-term trends
+- Useful for process control
+
+**Correlation Analysis**:
+- Relationship between different chemistry components
+- Impact of material changes on overall chemistry
+- Predictive modeling potential
+
+#### 8.2.3 Performance Metrics
+
+**Standard Mode Metrics**:
+- Total material throughput (kg)
+- Average flow rate (kg/s)
+- Material utilization efficiency (%)
+- Mass balance accuracy (%)
+
+**BF Mode Metrics**:
+- Chemistry stability indices
+- Target range compliance (%)
+- Basicity control effectiveness
+- Material quality scores
+
+### 8.3 Customization and Configuration
+
+#### 8.3.1 Configuration File Management
+
+**Location**: `config/default_config.json`
+
+**Key Configuration Parameters**:
+```json
+{
+  "simulation": {
+    "default_total_time": 150.0,
+    "default_conveyor_length": 50.0,
+    "default_resolution_size": 1.0,
+    "default_conveyor_velocity": 2.0
+  },
+  "ui": {
+    "window_width": 1400,
+    "window_height": 800,
+    "theme": "default"
+  },
+  "validation": {
+    "min_capacity": 1.0,
+    "max_capacity": 999999.0,
+    "min_flow_rate": 0.01,
+    "max_flow_rate": 1000.0
+  }
+}
+```
+
+#### 8.3.2 Custom Material Libraries
+
+**Creating Material Presets**:
+1. Define materials in BF mode
+2. Export material definitions
+3. Create custom configuration files
+4. Load for specific applications
+
+**Industry-Specific Presets**:
+- Steel industry materials
+- Cement industry raw materials
+- Mining operation materials
+- Chemical processing materials
+
+#### 8.3.3 User Interface Customization
+
+**Window Layout**:
+- Adjustable splitter positions
+- Resizable plot areas
+- Configurable default sizes
+
+**Plot Customization**:
+- Color schemes for different materials
+- Line styles and markers
+- Axis scaling and labels
+- Export formats and quality
+
+### 8.4 Integration Capabilities
+
+#### 8.4.1 Data Import/Export
+
+**Supported Formats**:
+- CSV files for material data
+- JSON for configuration
+- Excel files (with pandas)
+- Custom XML formats
+
+**Export Capabilities**:
+- Simulation results (CSV)
+- Chemistry reports (CSV, Excel)
+- Plot images (PNG, PDF, SVG)
+- Configuration backups
+
+#### 8.4.2 API Integration Potential
+
+**Future Development**:
+- REST API for remote control
+- Database connectivity
+- Real-time data feeds
+- Process control system integration
+
+#### 8.4.3 Scripting and Automation
+
+**Python Scripting**:
+```python
+# Example automation script
+from src.simulation.engine import SimulationEngine
+from src.models.simulation_data import SimulationParameters
+
+# Automated parameter sweep
+velocities = [1.5, 2.0, 2.5, 3.0]
+results = {}
+
+for velocity in velocities:
+    params = SimulationParameters(
+        total_time=150,
+        conveyor_velocity=velocity,
+        # ... other parameters
+    )
+    engine = SimulationEngine()
+    result = engine.run_simulation(params)
+    results[velocity] = result
+```
+
+### 8.5 Quality Assurance Features
+
+#### 8.5.1 Validation Framework
+
+**Input Validation**:
+- Parameter range checking
+- Material compatibility verification
+- Physics-based constraint validation
+- Error prevention and user guidance
+
+**Result Validation**:
+- Mass balance verification
+- Chemistry conservation checking
+- Physical realism assessment
+- Statistical significance testing
+
+#### 8.5.2 Error Detection and Handling
+
+**Common Error Categories**:
+1. **Configuration Errors**: Invalid parameters, missing data
+2. **Runtime Errors**: Numerical instabilities, memory issues
+3. **Results Errors**: Unphysical results, calculation errors
+4. **User Errors**: Incorrect inputs, misunderstanding
+
+**Error Recovery**:
+- Graceful degradation
+- Fallback calculations
+- User-friendly error messages
+- Suggested corrective actions
+
+#### 8.5.3 Testing and Verification
+
+**Unit Testing**:
+- Individual component testing
+- Algorithm verification
+- Edge case handling
+- Performance benchmarking
+
+**Integration Testing**:
+- End-to-end workflow testing
+- Cross-platform compatibility
+- User interface testing
+- Data integrity verification
+
+---
+
+## 9. File Management
+
+### 9.1 Case File Structure
+
+#### 9.1.1 File Format
+The application uses JSON format for case files, providing:
+- Human-readable text format
+- Cross-platform compatibility
+- Version control friendly
+- Easy backup and sharing
+
+#### 9.1.2 Case File Components
+
+**Standard Mode Case File**:
+```json
+{
+  "version": "1.0",
+  "mode": "standard",
+  "created": "2025-08-12T10:30:00Z",
+  "parameters": {
+    "total_time": 150.0,
+    "conveyor_length": 50.0,
+    "resolution_size": 1.0,
+    "conveyor_velocity": 2.0
+  },
+  "materials": [
+    "Lump_Ore",
+    "Sinter",
+    "Limestone"
+  ],
+  "silos": [
+    {
+      "material": "Lump_Ore",
+      "capacity": 1000.0,
+      "flow_rate": 5.0,
+      "material_position": 0,
+      "silo_position": 10,
+      "start_time": 0.0
+    }
+  ]
+}
+```
+
+**BF Mode Case File** (Extended):
+```json
+{
+  "version": "1.0",
+  "mode": "bf",
+  "created": "2025-08-12T10:30:00Z",
+  "parameters": { /* same as standard */ },
+  "materials": [ /* standard material names */ ],
+  "silos": [ /* standard silo data */ ],
+  "bf_parameters": { /* BF-specific parameters */ },
+  "bf_materials": {
+    "Pellets": {
+      "chemistry": {
+        "Fe": 65.5,
+        "SiO2": 4.2,
+        "CaO": 0.5,
+        "MgO": 0.3,
+        "Al2O3": 0.8
+      },
+      "density": 2200,
+      "color": "#8B4513"
+    }
+  },
+  "bf_silos": [ /* BF bunker configurations */ ]
+}
+```
+
+### 9.2 File Operations
+
+#### 9.2.1 Creating New Cases
+**Menu**: File → New (Ctrl+N)
+
+**Process**:
+1. Confirmation dialog if unsaved changes exist
+2. Reset all input fields to defaults
+3. Clear all tables
+4. Clear all plots
+5. Reset to Standard Mode
+6. Update status bar
+
+**Best Practices**:
+- Save current work before creating new case
+- Use descriptive names for new cases
+- Start with template cases when possible
+
+#### 9.2.2 Opening Existing Cases
+**Menu**: File → Open (Ctrl+O)
+
+**Process**:
+1. File browser dialog
+2. File format validation
+3. Version compatibility check
+4. Data loading and validation
+5. UI update with loaded data
+6. Mode switching if necessary
+
+**Supported Locations**:
+- Local file system
+- Network drives
+- Cloud storage (if mounted)
+- Recent files list
+
+#### 9.2.3 Saving Cases
+**Menu**: File → Save (Ctrl+S) or Save As (Ctrl+Shift+S)
+
+**Save Process**:
+1. Collect all current settings
+2. Validate data completeness
+3. Format data as JSON
+4. Write to file with backup
+5. Update window title
+6. Confirm save success
+
+**Auto-Save Features**:
+- Periodic background saves (configurable)
+- Recovery files for crash protection
+- Version history maintenance
+
+#### 9.2.4 File Naming Conventions
+
+**Recommended Naming**:
+```
+ProjectName_Description_Date.json
+Examples:
+- SteelPlant_BaseCase_20250812.json
+- BlastFurnace_HighGradePellets_20250812.json
+- MiningOp_Campaign1_20250812.json
+```
+
+**Avoid**:
+- Spaces in filenames
+- Special characters (/ \ : * ? " < > |)
+- Very long names (> 50 characters)
+
+### 9.3 File Organization
+
+#### 9.3.1 Directory Structure
+**Recommended Organization**:
+```
+Projects/
+├── Steel_Plant_Study/
+│   ├── Base_Cases/
+│   │   ├── Standard_Operation.json
+│   │   └── Peak_Production.json
+│   ├── Optimization_Cases/
+│   │   ├── Velocity_Study/
+│   │   └── Material_Ratio_Study/
+│   └── Final_Results/
+├── Mining_Operation/
+└── Research_Projects/
+```
+
+#### 9.3.2 Version Control
+**Manual Versioning**:
+- Use date stamps in filenames
+- Maintain changelog in separate file
+- Archive old versions regularly
+
+**Git Integration** (Advanced):
+- Track case files in version control
+- Collaborate on simulation studies
+- Maintain project history
+
+#### 9.3.3 Backup Strategies
+**Local Backups**:
+- Daily automated backups
+- Multiple backup locations
+- Regular backup verification
+
+**Cloud Backups**:
+- Sync with cloud storage
+- Cross-platform accessibility
+- Disaster recovery protection
+
+### 9.4 Import/Export Features
+
+#### 9.4.1 Material Data Import
+**CSV Format for Materials**:
+```csv
+Material,Fe%,SiO2%,CaO%,MgO%,Al2O3%,Density,Color
+Pellets,65.5,4.2,0.5,0.3,0.8,2200,#8B4513
+Sinter,57.2,9.8,9.5,1.2,1.8,1900,#CD853F
+```
+
+**Import Process**:
+1. File → Import → Material Data
+2. Select CSV file
+3. Map columns to properties
+4. Validate chemistry data
+5. Add to material database
+
+#### 9.4.2 Silo Configuration Import
+**CSV Format for Silos**:
+```csv
+Material,Capacity,FlowRate,Position,StartTime
+Lump_Ore,1000,5.0,10,0
+Sinter,800,4.0,20,15
+Limestone,500,2.5,30,30
+```
+
+#### 9.4.3 Batch Processing
+**Multiple Case Processing**:
+1. Create template case file
+2. Generate parameter variations
+3. Run batch simulations
+4. Collect and analyze results
+
+### 9.5 File Troubleshooting
+
+#### 9.5.1 Common File Issues
+
+**Issue**: "File not found" error
+**Causes**: 
+- File moved or deleted
+- Network drive disconnected
+- Incorrect path
+
+**Solutions**:
+- Verify file location
+- Check network connectivity
+- Use "Browse" to relocate file
+
+**Issue**: "Invalid file format" error
+**Causes**:
+- Corrupted file
+- Wrong file type
+- Version incompatibility
+
+**Solutions**:
+- Check file extension (.json)
+- Verify file size (not 0 bytes)
+- Try backup copy
+
+**Issue**: "Permission denied" error
+**Causes**:
+- File is read-only
+- Insufficient user permissions
+- File in use by another program
+
+**Solutions**:
+- Check file properties
+- Run as administrator
+- Close other applications
+
+#### 9.5.2 Data Recovery
+**Recovery Options**:
+1. **Auto-save files**: Check temp directory
+2. **Backup copies**: Look for .bak files
+3. **Version history**: Use previous versions
+4. **Export from memory**: If application still running
+
+**Prevention**:
+- Regular saves (Ctrl+S)
+- Enable auto-save
+- Maintain backups
+- Use version control
+
+#### 9.5.3 File Validation
+**Validation Checks**:
+- JSON syntax validation
+- Data type verification
+- Range checking
+- Completeness assessment
+
+**Repair Procedures**:
+1. Identify error location
+2. Fix syntax if possible
+3. Restore from backup
+4. Recreate if necessary
+
+---
+
+## 10. Export and Reporting
+
+### 10.1 Standard Mode Export Options
+
+#### 10.1.1 Simulation Results Export
+**CSV Export Features**:
+- Time-series data for all materials
+- Flow rates and proportions
+- Statistical summaries
+- Configuration parameters
+
+**Export Format**:
+```csv
+Time [s],Lump_Ore_Flow [kg/s],Sinter_Flow [kg/s],Total_Flow [kg/s],Lump_Ore_%,Sinter_%
+0.0,5.0,0.0,5.0,100.0,0.0
+0.5,5.0,0.0,5.0,100.0,0.0
+15.0,5.0,4.0,9.0,55.6,44.4
+...
+```
+
+#### 10.1.2 Plot Export
+**Supported Formats**:
+- **PNG**: High-quality raster images
+- **PDF**: Vector format for publications
+- **SVG**: Scalable vector graphics
+- **EPS**: Encapsulated PostScript
+
+**Export Process**:
+1. Right-click on plot area
+2. Select "Save figure"
+3. Choose format and location
+4. Adjust quality settings
+5. Confirm export
+
+### 10.2 Blast Furnace Mode Reporting
+
+#### 10.2.1 Comprehensive Chemistry Report
+**Menu**: Blast Furnace → Export Chemistry Report
+
+**Report Sections**:
+
+**Section 1: Material Chemistry Definitions**
+```csv
+=== MATERIAL CHEMISTRY DEFINITIONS ===
+Material,Fe%,SiO2%,CaO%,MgO%,Al2O3%,Density (kg/m³),Basicity_B2
+Pellets,65.50,4.20,0.50,0.30,0.80,2200.0,0.119
+Sinter,57.20,9.80,9.50,1.20,1.80,1900.0,0.969
+...
+```
+
+**Section 2: Chemistry Time Series**
+```csv
+=== CHEMISTRY TIME SERIES AT CONVEYOR DISCHARGE ===
+Time (s),Weighted_Fe%,Weighted_SiO2%,Weighted_CaO%,Weighted_MgO%,Weighted_Al2O3%,Basicity_B2,Total_Flow (kg/s)
+0.0,65.50,4.20,0.50,0.30,0.80,0.119,5.00
+0.5,65.50,4.20,0.50,0.30,0.80,0.119,5.00
+...
+```
+
+**Section 3: Statistical Summary**
+```csv
+=== STATISTICAL SUMMARY ===
+Parameter,Average,Std Dev,Min,Max,Target,Quality
+Fe%,62.45,2.15,58.30,65.50,58-66%,Good
+SiO2%,6.20,1.80,4.20,9.80,4-8%,-
+Basicity B2,1.08,0.15,0.80,1.25,1.0-1.2,Good
+```
+
+**Section 4: Simulation Parameters**
+```csv
+=== SIMULATION PARAMETERS ===
+Parameter,Value,Unit
+Total Time,150.0,seconds
+Conveyor Length,50.0,meters
+Conveyor Velocity,2.0,m/s
+Mass Balance Error,0.023,%
+```
+
+#### 10.2.2 Quality Assessment Report
+**Quality Indicators**:
+- **Fe Stability**: Standard deviation < 2.0% = Good
+- **Basicity Control**: Average within 1.0-1.2 = Good
+- **Overall Assessment**: Summary of all indicators
+
+**Trend Analysis**:
+- Moving averages
+- Trend direction indicators
+- Correlation coefficients
+- Process capability indices
+
+#### 10.2.3 Operational Report
+**Production Summary**:
+- Total material processed (tons)
+- Average chemistry composition
+- Quality compliance percentage
+- Operational efficiency metrics
+
+**Material Consumption**:
+- Individual material usage
+- Cost analysis (if unit costs provided)
+- Inventory requirements
+- Procurement recommendations
+
+### 10.3 Custom Report Generation
+
+#### 10.3.1 Report Templates
+**Standard Templates**:
+- Daily production report
+- Quality control summary
+- Process optimization study
+- Equipment performance analysis
+
+**Template Structure**:
+```
+1. Executive Summary
+2. Simulation Overview
+3. Key Results
+4. Quality Assessment
+5. Recommendations
+6. Technical Details
+7. Appendices
+```
+
+#### 10.3.2 Automated Reporting
+**Batch Report Generation**:
+```python
+# Example automation script
+def generate_daily_report(simulation_results):
+    report = {
+        'date': today(),
+        'total_throughput': calculate_throughput(results),
+        'quality_metrics': assess_quality(results),
+        'recommendations': generate_recommendations(results)
+    }
+    export_to_pdf(report, 'daily_report.pdf')
+```
+
+#### 10.3.3 Report Customization
+**Configurable Elements**:
+- Company logos and headers
+- Custom quality thresholds
+- Specific chart types
+- Color schemes and branding
+- Units and conventions
+
+### 10.4 Data Integration
+
+#### 10.4.1 Database Export
+**Supported Databases**:
+
+
+#### 10.4.1 Database Export
+**Supported Databases**:
+- SQLite (local database files)
+- MySQL/MariaDB (network databases)
+- PostgreSQL (enterprise databases)
+- Microsoft SQL Server
+
+**Database Schema Example**:
+```sql
+CREATE TABLE simulation_results (
+    id INTEGER PRIMARY KEY,
+    timestamp DATETIME,
+    simulation_id VARCHAR(50),
+    time_point FLOAT,
+    material_name VARCHAR(50),
+    flow_rate FLOAT,
+    fe_content FLOAT,
+    sio2_content FLOAT,
+    cao_content FLOAT,
+    basicity FLOAT
+);
+```
+
+
+#### 10.4.2 API Integration
+**REST API Endpoints** (Future feature):
+```
+GET /api/simulations - List all simulations
+POST /api/simulations - Create new simulation
+GET /api/simulations/{id}/results - Get results
+POST /api/export/chemistry - Export chemistry data
+```
+
+#### 10.4.3 Real-time Data Streaming
+**Data Stream Format**:
+```json
+{
+    "timestamp": "2025-08-12T10:30:15Z",
+    "simulation_id": "BF_Campaign_001",
+    "chemistry": {
+        "Fe": 62.5,
+        "SiO2": 5.8,
+        "CaO": 6.2,
+        "basicity": 1.07
+    },
+    "flow_rate": 8.5,
+    "quality": "Good"
+}
+```
+
+### 10.5 Report Distribution
+
+#### 10.5.1 Email Integration
+**Automated Email Reports**:
+- Scheduled daily/weekly reports
+- Alert notifications for quality deviations
+- Summary reports for management
+- Technical reports for engineers
+
+#### 10.5.2 Web Dashboard
+**Dashboard Features**:
+- Real-time chemistry monitoring
+- Quality trend visualization
+- Alert status indicators
+- Historical data access
+
+#### 10.5.3 Mobile Access
+**Mobile-Friendly Reports**:
+- Responsive design for tablets/phones
+- Key metrics summary
+- Alert notifications
+- Quick access to critical data
+
+---
+
+## 11. Troubleshooting
+
+### 11.1 Common Issues and Solutions
+
+#### 11.1.1 Application Startup Problems
+
+**Issue**: Application won't start
+**Symptoms**: 
+- Command line error messages
+- No window appears
+- Immediate crash
+
+**Diagnostic Steps**:
+1. Check Python version: `python --version`
+2. Verify dependencies: `pip list | grep PyQt5`
+3. Test in console:
+   ```python
+   import PyQt5
+   import matplotlib
+   import numpy
+   print("All imports successful")
+   ```
+
+**Solutions**:
+- **Missing PyQt5**: `pip install PyQt5`
+- **Wrong Python version**: Upgrade to Python 3.7+
+- **Virtual environment**: Activate correct environment
+- **PATH issues**: Verify Python installation path
+
+**Issue**: "ImportError: No module named..."
+**Solutions**:
+```bash
+# Install missing packages
+pip install PyQt5 matplotlib numpy
+
+# Check virtual environment
+source conveyor_env/bin/activate  # Linux/Mac
+conveyor_env\Scripts\activate     # Windows
+
+# Verify installation
+python -c "import PyQt5; print('PyQt5 OK')"
+```
+
+#### 11.1.2 Simulation Execution Problems
+
+**Issue**: "Validation Error" messages
+**Common Causes**:
+- No materials defined
+- No silos configured
+- Invalid parameter ranges
+- Inconsistent data
+
+**Solutions**:
+1. **Check Materials Table**:
+   - At least one material must be defined
+   - Material names cannot be empty
+   - No duplicate material names
+
+2. **Verify Silo Configuration**:
+   - At least one silo required
+   - All fields must be filled
+   - Flow rates must be positive
+   - Positions within conveyor length
+
+3. **Validate Parameters**:
+   - Simulation time > 0
+   - Conveyor length > 0
+   - Resolution size > 0 and ≤ conveyor length
+   - Conveyor velocity > 0
+
+**Issue**: Simulation runs but produces no flow
+**Causes**:
+- Start times beyond simulation time
+- Zero flow rates
+- Very large capacities with short simulation time
+
+**Diagnostic Questions**:
+- Does any silo start before simulation ends?
+- Are flow rates realistic for the time period?
+- Will any silo finish within simulation time?
+
+**Issue**: Memory errors during large simulations
+**Symptoms**:
+- "MemoryError" exceptions
+- Application freezing
+- System becoming unresponsive
+
+**Solutions**:
+- Reduce simulation time
+- Increase resolution size (fewer calculation points)
+- Close other applications
+- Upgrade system RAM
+- Break large simulations into smaller segments
+
+#### 11.1.3 Plot and Visualization Issues
+
+**Issue**: Empty or blank plots
+**Causes**:
+- No simulation results
+- Data calculation errors
+- Matplotlib backend issues
+
+**Solutions**:
+1. **Verify simulation completed successfully**
+2. **Check for error messages in console**
+3. **Try different matplotlib backend**:
+   ```python
+   import matplotlib
+   matplotlib.use('Qt5Agg')  # or 'TkAgg', 'Agg'
+   ```
+
+**Issue**: Plots not updating
+**Solutions**:
+- Click "Clear Plots" button
+- Re-run simulation
+- Restart application
+- Check plot widget initialization
+
+**Issue**: Poor plot quality or formatting
+**Solutions**:
+- Adjust figure size in configuration
+- Modify DPI settings for exports
+- Update matplotlib to latest version
+- Check display scaling settings
+
+#### 11.1.4 Blast Furnace Mode Issues
+
+**Issue**: BF mode not working
+**Symptoms**:
+- Cannot enable BF mode
+- Chemistry plots show "No data available"
+- BF menu items disabled
+
+**Diagnostic Steps**:
+1. Check if BF mode toggle is working
+2. Verify materials have chemistry data
+3. Confirm simulation runs in BF mode
+4. Check console for BF-specific errors
+
+**Solutions**:
+- Reload BF material presets
+- Verify chemistry data completeness
+- Check material-silo assignments
+- Restart application in BF mode
+
+**Issue**: Chemistry calculations incorrect
+**Verification Steps**:
+1. Manual calculation check:
+   ```
+   If 70% Material A (60% Fe) + 30% Material B (50% Fe)
+   Expected weighted Fe = 0.7 × 60 + 0.3 × 50 = 57%
+   ```
+2. Check material flow proportions
+3. Verify chemistry data entry
+4. Compare with expected values
+
+#### 11.1.5 File Operation Problems
+
+**Issue**: Cannot save files
+**Causes**:
+- Permission restrictions
+- Disk space limitations
+- File path issues
+- Read-only directories
+
+**Solutions**:
+- Check available disk space
+- Verify write permissions
+- Try different save location
+- Run application as administrator (Windows)
+
+**Issue**: Cannot open case files
+**Causes**:
+- File corruption
+- Version incompatibility
+- JSON syntax errors
+- Missing files
+
+**Solutions**:
+- Check file exists and is not empty
+- Verify JSON syntax with online validator
+- Try backup copy
+- Recreate from scratch if necessary
+
+### 11.2 Performance Optimization
+
+#### 11.2.1 Simulation Performance
+
+**Factors Affecting Performance**:
+- Simulation time length
+- Resolution size (number of segments)
+- Number of materials and silos
+- BF mode chemistry calculations
+
+**Optimization Strategies**:
+
+**Reduce Computational Load**:
+```
+Segments = Conveyor Length / Resolution Size
+Time Steps = Simulation Time / (Resolution Size / Velocity)
+Total Calculations = Segments × Time Steps × Materials
+```
+
+**Performance Guidelines**:
+| Simulation Size | Segments | Time Steps | Expected Time |
+|----------------|----------|------------|---------------|
+| Small | < 100 | < 200 | < 1 second |
+| Medium | 100-500 | 200-1000 | 1-5 seconds |
+| Large | 500-1000 | 1000-5000 | 5-30 seconds |
+| Very Large | > 1000 | > 5000 | > 30 seconds |
+
+**Memory Optimization**:
+- Monitor system resources
+- Close unused applications
+- Use appropriate resolution size
+- Consider 64-bit Python for large simulations
+
+#### 11.2.2 User Interface Performance
+
+**Responsiveness Issues**:
+- Long simulation blocking UI
+- Slow plot rendering
+- Delayed user input response
+
+**Solutions**:
+- Simulations run in background threads
+- Progress indicators show activity
+- Plot caching for faster updates
+- Async operations where possible
+
+**Plot Performance**:
+- Limit data points for very long simulations
+- Use data decimation for display
+- Cache rendered plots
+- Optimize matplotlib settings
+
+### 11.3 Debugging Tools
+
+#### 11.3.1 Console Output
+Enable detailed logging:
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+```
+
+**Debug Information Includes**:
+- Parameter validation results
+- Simulation progress updates
+- Memory usage statistics
+- Error stack traces
+
+#### 11.3.2 Built-in Diagnostics
+
+**System Information**:
+```python
+# Check system resources
+import psutil
+print(f"Available RAM: {psutil.virtual_memory().available / 1024**3:.1f} GB")
+print(f"CPU cores: {psutil.cpu_count()}")
+```
+
+**Simulation Diagnostics**:
+- Mass balance calculations
+- Matrix size information
+- Performance timing
+- Memory allocation
+
+#### 11.3.3 Data Validation Tools
+
+**Chemistry Validation** (BF Mode):
+```python
+def validate_chemistry(chemistry_dict):
+    total = sum(chemistry_dict.values())
+    if total > 100:
+        print(f"Warning: Total chemistry > 100% ({total:.1f}%)")
+    
+    for element, value in chemistry_dict.items():
+        if value < 0:
+            print(f"Error: Negative {element} content")
+        if value > 100:
+            print(f"Error: {element} content > 100%")
+```
+
+### 11.4 Getting Help
+
+#### 11.4.1 Built-in Help System
+- **Help Menu**: Basic application information
+- **BF Mode Guide**: Detailed blast furnace instructions
+- **About Dialog**: Version and contact information
+
+#### 11.4.2 Error Reporting
+**Information to Include**:
+- Application version
+- Operating system
+- Python version
+- Error message (exact text)
+- Steps to reproduce
+- Input files (if applicable)
+
+**Error Report Template**:
+```
+Application: Conveyor Blending Model v1.0
+OS: Windows 10 / macOS 12 / Ubuntu 20.04
+Python: 3.8.5
+PyQt5: 5.15.2
+
+Error Message:
+[Exact error text here]
+
+Steps to Reproduce:
+1. Launch application
+2. Enable BF mode
+3. Load default materials
+4. Run simulation
+5. Error occurs
+
+Additional Information:
+[Any other relevant details]
+```
+
+#### 11.4.3 Community Resources
+**Documentation**:
+- User manual (this document)
+- API documentation
+- Example cases
+- Tutorial videos
+
+**Support Channels**:
+- GitHub issues (bug reports)
+- User forums (discussions)
+- Email support (critical issues)
+- Documentation wiki
+
+### 11.5 Preventive Measures
+
+#### 11.5.1 Best Practices
+- **Regular Saves**: Save work frequently (Ctrl+S)
+- **Backup Strategy**: Maintain multiple backup copies
+- **Version Control**: Track changes to important cases
+- **Testing**: Verify results with known cases
+- **Documentation**: Keep notes on simulation setups
+
+#### 11.5.2 System Maintenance
+- **Software Updates**: Keep Python and packages updated
+- **Disk Cleanup**: Maintain adequate free disk space
+- **Memory Management**: Monitor system resources
+- **File Organization**: Maintain organized project structure
+
+#### 11.5.3 Quality Assurance
+- **Input Validation**: Double-check parameter values
+- **Result Verification**: Compare with expected outcomes
+- **Mass Balance**: Verify conservation laws
+- **Physical Realism**: Ensure results make sense
+
+---
+
+## 12. Technical Reference
+
+### 12.1 Mathematical Models
+
+#### 12.1.1 Material Flow Equations
+
+**Basic Flow Model**:
+The simulation uses a discrete material transport model where:
+
+```
+Material Matrix M(i,j,t) = amount of material i at position j at time t
+
+Transport Equation:
+M(i,j,t+dt) = M(i,j-v*dt,t) + S(i,j,t)*dt
+
+Where:
+- i = material index (0 to n_materials-1)
+- j = position index (0 to n_segments-1)  
+- t = time
+- v = conveyor velocity
+- dt = time step
+- S(i,j,t) = source term from silos
+```
+
+**Discrete Implementation**:
+```python
+# Shift materials by step_size positions
+step_size = int(velocity * dt / resolution_size)
+material_matrix[:, step_size:] = material_matrix[:, :-step_size]
+material_matrix[:, :step_size] = 0
+
+# Add new material from active silos
+for silo in active_silos:
+    quantity = silo.flow_rate * dt
+    material_matrix[silo.material_pos, silo.silo_pos] += quantity
+```
+
+#### 12.1.2 Chemistry Calculations (BF Mode)
+
+**Weighted Average Chemistry**:
+```
+C_avg(t) = Σ[C_i * F_i(t)] / Σ[F_i(t)]
+
+Where:
+- C_avg(t) = average chemistry at time t
+- C_i = chemistry of material i
+- F_i(t) = flow rate of material i at time t
+```
+
+**Basicity Calculations**:
+```
+Binary Basicity (B2) = CaO% / SiO2%
+Quaternary Basicity (B4) = (CaO% + MgO%) / (SiO2% + Al2O3%)
+```
+
+**Implementation**:
+```python
+def calculate_weighted_chemistry(flows, chemistry_db):
+    total_flow = sum(flows)
+    if total_flow == 0:
+        return None
+    
+    weighted_chemistry = {}
+    for element in ['Fe', 'SiO2', 'CaO', 'MgO', 'Al2O3']:
+        weighted_sum = 0
+        for i, material in enumerate(materials):
+            if flows[i] > 0:
+                weight = flows[i] / total_flow
+                weighted_sum += chemistry_db[material][element] * weight
+        weighted_chemistry[element] = weighted_sum
+    
+    return weighted_chemistry
+```
+
+#### 12.1.3 Mass Balance Validation
+
+**Conservation Check**:
+```
+Input Mass = Σ(silo_capacity_i)
+Output Mass = ∫(total_flow(t) * dt) from 0 to T
+Balance Error = |Input Mass - Output Mass| / Input Mass * 100%
+```
+
+**Acceptable Error**: < 0.1% for well-configured simulations
+
+#### 12.1.4 Statistical Calculations
+
+**Process Capability Indices**:
+```
+Cp = (USL - LSL) / (6 * σ)
+Cpk = min((USL - μ)/(3*σ), (μ - LSL)/(3*σ))
+
+Where:
+- USL = Upper Specification Limit
+- LSL = Lower Specification Limit  
+- μ = Process Mean
+- σ = Process Standard Deviation
+```
+
+### 12.2 Algorithm Implementation
+
+#### 12.2.1 Simulation Loop Structure
+
+```python
+def run_simulation(parameters):
+    # Initialize
+    dt = resolution_size / velocity
+    n_steps = int(total_time / dt)
+    material_matrix = zeros((n_materials, n_segments))
+    
+    # Main simulation loop
+    for step in range(n_steps):
+        time = step * dt
+        
+        # Add materials from active silos
+        for silo in silos:
+            if silo.is_active_at_time(time):
+                quantity = silo.flow_rate * dt
+                add_material(material_matrix, silo, quantity)
+        
+        # Record current state
+        flows = material_matrix[:, -1]  # End of conveyor
+        record_data(flows, time)
+        
+        # Transport materials
+        shift_materials(material_matrix, step_size)
+    
+    return results
+```
+
+#### 12.2.2 Matrix Operations
+
+**Efficient Material Shifting**:
+```python
+def shift_matrix_right(matrix, steps):
+    """Vectorized material transport"""
+    if steps <= 0:
+        return matrix.copy()
+    
+    rows, cols = matrix.shape
+    shifted = zeros_like(matrix)
+    
+    if steps < cols:
+        shifted[:, steps:] = matrix[:, :-steps]
+    
+    return shifted
+```
+
+**Memory Optimization**:
+- Use NumPy for vectorized operations
+- Pre-allocate arrays to avoid dynamic resizing
+- Use appropriate data types (float32 vs float64)
+- Clean up temporary arrays
+
+#### 12.2.3 Chemistry Tracking Algorithm
+
+```python
+class ChemistryTracker:
+    def __init__(self, n_materials, n_segments):
+        # Chemistry matrix: [materials, segments, components]
+        self.chemistry_matrix = zeros((n_materials, n_segments, 5))
+        self.components = ['Fe', 'SiO2', 'CaO', 'MgO', 'Al2O3']
+    
+    def add_chemistry(self, material_pos, silo_pos, quantity, chemistry):
+        """Add weighted chemistry to position"""
+        for i, component in enumerate(self.components):
+            self.chemistry_matrix[material_pos, silo_pos, i] += \
+                chemistry[component] * quantity
+    
+    def shift_chemistry(self, steps):
+        """Transport chemistry with materials"""
+        if steps > 0:
+            self.chemistry_matrix[:, steps:, :] = \
+                self.chemistry_matrix[:, :-steps, :]
+            self.chemistry_matrix[:, :steps, :] = 0
+```
+
+### 12.3 Data Structures
+
+#### 12.3.1 Core Classes
+
+**Material Class**:
+```python
+@dataclass
+class Material:
+    name: str
+    density: float
+    description: Optional[str] = None
+    chemistry: Optional[Dict[str, float]] = None
+    
+    def validate(self):
+        if self.density <= 0:
+            raise ValueError("Density must be positive")
+        if self.chemistry:
+            self.validate_chemistry()
+```
+
+**Silo Class**:
+```python
+@dataclass  
+class Silo:
+    material: str
+    capacity: float  # kg
+    flow_rate: float  # kg/s
+    material_position: int
+    silo_position: int  # meters
+    start_time: float  # seconds
+    
+    def is_active_at_time(self, time: float) -> bool:
+        return self.start_time <= time <= self.end_time()
+    
+    def end_time(self) -> float:
+        return self.start_time + (self.capacity / self.flow_rate)
+```
+
+**SimulationResults Class**:
+```python
+@dataclass
+class SimulationResults:
+    material_matrix: np.ndarray
+    flow_data: np.ndarray  
+    proportion_data: np.ndarray
+    parameters: SimulationParameters
+    metadata: Dict[str, Any]
+    chemistry_trends: Optional[Dict] = None
+    
+    @property
+    def time_steps(self) -> int:
+        return self.flow_data.shape[0]
+```
+
+#### 12.3.2 Configuration Management
+
+**Config Structure**:
+```python
+class ConfigManager:
+    def __init__(self, config_file: str):
+        self.config = self.load_config(config_file)
+    
+    def get(self, key: str, default=None):
+        """Get nested config value using dot notation"""
+        keys = key.split('.')
+        value = self.config
+        for k in keys:
+            value = value.get(k, {})
+        return value if value != {} else default
+```
+
+### 12.4 Performance Characteristics
+
+#### 12.4.1 Computational Complexity
+
+**Time Complexity**:
+- Standard simulation: O(n_steps × n_silos)
+- BF mode simulation: O(n_steps × n_silos × n_chemistry_components)
+- Matrix shifting: O(n_materials × n_segments)
+
+**Space Complexity**:
+- Material matrix: O(n_materials × n_segments)
+- Flow data: O(n_steps × n_materials)
+- Chemistry matrix (BF): O(n_materials × n_segments × 5)
+
+#### 12.4.2 Scaling Behavior
+
+**Linear Scaling Factors**:
+- Simulation time → time steps
+- Conveyor length → segments (with fixed resolution)
+- Number of materials → matrix width
+- Number of silos → processing time
+
+**Memory Scaling**:
+```
+Memory (MB) ≈ (n_materials × n_segments × 8 bytes) / 1,048,576
+For 10 materials, 100 segments: ~8 KB
+For 20 materials, 1000 segments: ~160 KB
+```
+
+#### 12.4.3 Optimization Techniques
+
+**Vectorization**:
+- NumPy operations instead of loops
+- Broadcasting for element-wise operations
+- Pre-allocated arrays
+
+**Memory Management**:
+- Efficient data types
+- Garbage collection optimization
+- Memory pooling for large simulations
+
+**Caching**:
+- Result caching for repeated calculations
+- Plot data caching
+- Configuration caching
+
+### 12.5 Validation and Testing
+
+#### 12.5.1 Unit Testing Framework
+
+**Test Categories**:
+- **Model Tests**: Mathematical correctness
+- **Integration Tests**: Component interaction
+- **Performance Tests**: Speed and memory
+- **Regression Tests**: Prevent functionality loss
+
+**Example Test**:
+```python
+class TestMaterialFlow(unittest.TestCase):
+    def test_single_silo_flow(self):
+        """Test basic material flow from one silo"""
+        # Setup
+        silo = Silo("TestMaterial", 100, 1.0, 0, 0, 0)
+        params = SimulationParameters(
+            total_time=50, conveyor_length=10, 
+            resolution_size=1.0, conveyor_velocity=1.0,
+            materials=["TestMaterial"], silos=[silo]
+        )
+        
+        # Execute
+        engine = SimulationEngine()
+        results = engine.run_simulation(params)
+        
+        # Verify
+        total_output = np.sum(results.flow_data[:, -1]) * dt
+        expected_output = min(100, 50 * 1.0)  # capacity or time*rate
+        self.assertAlmostEqual(total_output, expected_output, places=1)
+```
+
+#### 12.5.2 Validation Benchmarks
+
+**Physical Validation**:
+- Mass conservation (error < 0.1%)
+- Energy conservation (where applicable)
+- Momentum conservation (simplified)
+
+**Numerical Validation**:
+- Grid independence testing
+- Time step sensitivity analysis
+- Comparison with analytical solutions
+
+**Industrial Validation**:
+- Comparison with plant data
+- Expert review of results
+- Industry standard compliance
+
+---
+
+## 13. Best Practices
+
+### 13.1 Simulation Setup Best Practices
+
+#### 13.1.1 Parameter Selection Guidelines
+
+**Simulation Time**:
+```
+Recommended Time = Max(Silo Runtime) + 2 × Travel Time
+Travel Time = Conveyor Length / Velocity
+
+Example:
+- Longest silo: 200s runtime
+- Conveyor: 100m at 2 m/s → 50s travel time  
+- Recommended time: 200 + 2×50 = 300s
+```
+
+**Resolution Selection**:
+```
+High Accuracy: Resolution ≤ Conveyor Length / 100
+Standard: Resolution ≤ Conveyor Length / 50  
+Fast: Resolution ≤ Conveyor Length / 20
+
+Trade-off: Accuracy vs. Computation Time
+```
+
+**Velocity Guidelines**:
+- **Mining/Bulk Materials**: 1-4 m/s
+- **Manufacturing**: 0.5-2 m/s
+- **High-Speed Transport**: 5-15 m/s
+- **Laboratory Scale**: 0.1-1 m/s
+
+#### 13.1.2 Material Configuration
+
+**Material Naming**:
+- Use descriptive names: "Iron_Ore_65Fe" not "Material1"
+- Include key properties in name
+- Avoid spaces (use underscores)
+- Maintain consistent convention
+
+**BF Material Chemistry**:
+- Verify chemistry totals are reasonable (< 100%)
+- Use industry-standard analysis methods
+- Include all major components
+- Validate basicity calculations
+
+#### 13.1.3 Silo/Bunker Setup
+
+**Positioning Strategy**:
+```
+Minimum Spacing = 2 × Resolution Size
+Blending Points: Same position for multiple silos
+Sequential Addition: Staged positions along conveyor
+```
+
+**Flow Rate Selection**:
+- Consider physical limitations
+- Account for material properties
+- Plan for realistic operation
+- Verify total system capacity
+
+**Timing Strategy**:
+- **Simultaneous Start**: Steady-state operation
+- **Staged Start**: Composition control
+- **Campaign Operation**: Different periods, different materials
+
+### 13.2 Quality Control Practices
+
+#### 13.2.1 Input Validation
+
+**Pre-Simulation Checklist**:
+- [ ] All materials defined and named
+- [ ] Material chemistry complete (BF mode)
+- [ ] Silo configurations realistic
+- [ ] Parameter ranges appropriate
+- [ ] Total simulation time adequate
+- [ ] Mass balance expectations
+
+**Data Quality Checks**:
+```python
+def validate_input_data(parameters):
+    # Check material completeness
+    assert len(parameters.materials) > 0, "No materials defined"
+    
+    # Verify silo configuration
+    for silo in parameters.silos:
+        assert silo.flow_rate > 0, "Flow rate must be positive"
+        assert silo.capacity > 0, "Capacity must be positive"
+        assert silo.start_time >= 0, "Start time must be non-negative"
+    
+    # Check parameter consistency
+    assert parameters.resolution_size <= parameters.conveyor_length
+    assert parameters.total_time > 0
+```
+
+#### 13.2.2 Result Validation
+
+**Mass Balance Verification**:
+```python
+def check_mass_balance(results):
+    input_mass = sum(silo.capacity for silo in results.parameters.silos)
+    output_mass = np.trapz(results.flow_data[:, -1], 
+                          dx=results.metadata['dt'])
+    error = abs(input_mass - output_mass) / input_mass * 100
+    
+    if error > 0.5:
+        print(f"Warning: Mass balance error {error:.2f}%")
+    
+    return error < 0.1  # Good balance
+```
+
+**Physical Realism Checks**:
+- Flow rates within equipment capabilities
+- Chemistry values within expected ranges
+- Material proportions achievable
+- Timing sequences realistic
+
+**Statistical Validation**:
+- Chemistry stability within industry norms
+- Flow rate consistency
+- Trend analysis for unexpected behavior
+- Correlation analysis between variables
+
+#### 13.2.3 BF Mode Quality Assurance
+
+**Chemistry Validation**:
+```python
+def validate_bf_chemistry(chemistry_data):
+    for material, data in chemistry_data.items():
+        chem = data['chemistry']
+        
+        # Check iron content range
+        if not 0 <= chem['Fe'] <= 70:
+            print(f"Warning: {material} Fe content unusual: {chem['Fe']}%")
+        
+        # Check basicity
+        if chem['SiO2'] > 0:
+            basicity = chem['CaO'] / chem['SiO2']
+            if not 0.1 <= basicity <= 5.0:
+                print(f"Warning: {material} basicity unusual: {basicity:.2f}")
+```
+
+**Target Compliance**:
+- Fe content: 58-66% for furnace feed
+- Basicity (B2): 1.0-1.2 for optimal operation
+- MgO content: 0.5-3% for refractory protection
+- Al2O3 content: 1-3% for slag quality
+
+### 13.3 Workflow Optimization
+
+#### 13.3.1 Efficient Study Design
+
+**Sequential Approach**:
+1. **Base Case**: Establish reference simulation
+2. **Sensitivity Analysis**: Vary one parameter at a time
+3. **Optimization**: Identify best configurations
+4. **Validation**: Verify results with independent data
+
+**Parameter Study Matrix**:
+```
+Study: Conveyor Velocity Optimization
+Base Case: 2.0 m/s
+Variations: 1.5, 2.0, 2.5, 3.0 m/s
+Metrics: Throughput, Mixing Quality, Energy
+
+Study: Material Ratio Optimization  
+Base Case: 70% Ore, 30% Flux
+Variations: 60/40, 65/35, 70/30, 75/25, 80/20
+Metrics: Chemistry Stability, Cost, Quality
+```
+
+#### 13.3.2 Documentation Standards
+
+**Case Documentation**:
+```
+Case Name: [Project]_[Description]_[Date]
+Objective: What question does this answer?
+Setup: Key parameters and assumptions
+Results: Summary of findings
+Conclusions: What was learned?
+Next Steps: Follow-up studies needed
+```
+
+**Version Control**:
+- Use meaningful file names with dates
+- Maintain change logs
+- Archive old versions
+- Document parameter changes
+
+#### 13.3.3 Results Analysis
+
+**Comparative Analysis**:
+```python
+def compare_simulations(case1, case2):
+    comparison = {
+        'throughput_change': calculate_throughput_difference(case1, case2),
+        'chemistry_stability': compare_stability(case1, case2),
+        'efficiency_improvement': calculate_efficiency_gain(case1, case2)
+    }
+    return comparison
+```
+
+**Trend Identification**:
+- Moving averages for noise reduction
+- Correlation analysis between variables
+- Change point detection
+- Seasonal pattern recognition
+
+### 13.4 Industrial Implementation
+
+#### 13.4.1 Scaling from Simulation to Reality
+
+**Scale-Up Considerations**:
+- Material property variations in practice
+- Equipment limitations and constraints
+- Environmental factors (temperature, humidity)
+- Operational variability
+
+**Validation with Plant Data**:
+- Compare simulation predictions with measurements
+- Calibrate model parameters based on real data
+- Account for measurement uncertainties
+- Establish confidence intervals
+
+#### 13.4.2 Process Control Integration
+
+**Control Strategy Development**:
+```
+Feedforward Control:
+- Predict chemistry based on material feeds
+- Adjust flux additions proactively
+- Compensate for known disturbances
+
+Feedback Control:
+- Monitor discharge chemistry
+- Correct deviations from targets  
+- Implement closed-loop control
+```
+
+**Real-Time Implementation**:
+- Interface with plant control systems
+- Continuous model updates
+- Automatic parameter adjustment
+- Alert generation for operators
+
+#### 13.4.3 Maintenance and Updates
+
+**Regular Model Maintenance**:
+- Update material properties with new analyses
+- Calibrate parameters with recent plant data
+- Validate model predictions regularly
+- Document model changes and improvements
+
+**Continuous Improvement**:
+- Collect feedback from operators
+- Analyze model prediction accuracy
+- Identify areas for enhancement
+- Implement updates systematically
+
+### 13.5 Training and Education
+
+#### 13.5.1 User Training Program
+
+**Basic Training (2-4 hours)**:
+1. Application overview and capabilities
+2. Standard mode operation
+3. Basic simulation setup
+4. Results interpretation
+5. File management
+
+**Advanced Training (1-2 days)**:
+1. Blast furnace mode features
+2. Chemistry tracking and analysis
+3. Advanced visualization tools
+4. Quality control procedures
+5. Troubleshooting and optimization
+
+**Specialized Training**:
+- Industry-specific applications
+- Integration with plant systems
+- Advanced statistical analysis
+- Custom development
+
+#### 13.5.2 Educational Applications
+
+**Academic Use**:
+- Demonstrate material flow principles
+- Teach process control concepts
+- Illustrate optimization techniques
+- Provide hands-on simulation experience
+
+**Training Scenarios**:
+```
+Scenario 1: Basic Material Blending
+- Objective: Achieve target proportions
+- Challenge: Varying material availability
+- Learning: Flow control strategies
+
+Scenario 2: BF Chemistry Control  
+- Objective: Maintain target basicity
+- Challenge: Variable ore chemistry
+- Learning: Flux adjustment strategies
+
+Scenario 3: System Optimization
+- Objective: Maximize throughput
+- Challenge: Equipment constraints
+- Learning: Multi-objective optimization
+```| Material | Fe% | SiO2% | CaO% | MgO% | Al2O3% | Density (kg/m³) | Application |
+|----------|-----|-------|------|------|--------|----------------|-------------|
+| Pellets | 65.5 | 4.2 | 0.5 | 0.3 | 0.8 | 2200 | High-grade iron source |
+| Sinter | 57.2 | 9.8 | 9.5 | 1.2 | 1.8 | 1900 | Processed iron ore |
+| Lump Ore | 62.0 | 6.5 | 0.2 | 0.1 | 2.1 | 2500 | Natural iron ore |
+| Coke | 0.5 | 5.5 | 0.3 | 0.1 | 2.8 | 500 | Fuel and reducing agent |
+| Limestone | 0.5 | 2.0 | 52.0 | 2.5 | 0.8 | 1600 | Flux for basicity control |
+| Dolomite | 0.3 | 1.5 | 30.0 | 20.0 | 0.5 | 1700 | MgO source flux |
+| Quartzite | 0.2 | 95.0 | 0.5 | 0.1 | 2.0 | 1650 | SiO2 adjustment |
+
+#### 7.3.2 Understanding Material Chemistry
+
+**Iron Content (Fe%)**:
+- Primary indicator of iron ore quality
+- Target range: 58-66% for furnace feed
+- Higher Fe content improves furnace productivity
+- Pellets typically have highest Fe content
+
+**Silica Content (SiO2%)**:
+- Forms slag with fluxes
+- Target range: 4-8% in furnace burden
+- Must be balanced with CaO for proper basicity
+- Quartzite used for SiO2 adjustment
+
+**Lime Content (CaO%)**:
+- Essential for slag formation
+- Controls basicity (CaO/SiO2 ratio)
+- Target basicity: 1.0-1.2
+- Limestone and sinter are main CaO sources
+
+**Magnesia Content (MgO%)**:
+- Improves slag fluidity
+- Protects furnace refractory
+- Target range: 0.5-3%
+- Dolomite is primary MgO source
+
+**Alumina Content (Al2O3%)**:
+- Affects slag viscosity
+- Should be controlled within limits
+- Target range: 1-3%
+- High Al2O3 can cause operational problems
+
+#### 7.3.3 Adding Custom BF Materials
+
+1. **Click "Add Material"** in materials table
+2. **Enter Material Properties**:
+   - Descriptive name (e.g., "High_Grade_Pellets")
+   - Chemistry values (Fe%, SiO2%, CaO%, MgO%, Al2O3%)
+   - Bulk density (kg/m³)
+   - Color for visualization (hex code)
+
+3. **Validation Rules**:
+   - Fe content: 0-70%
+   - Other oxides: 0-100%
+   - Total chemistry should be reasonable (sum < 100%)
+   - Density: 500-3000 kg/m³ for typical materials
+
+#### 7.3.4 Material Quality Assessment
+
+**Quality Indicators**:
+- **Premium Grade**: Fe > 65%, SiO2 < 5%
+- **Standard Grade**: Fe 58-65%, SiO2 5-8%
+- **Low Grade**: Fe < 58%, SiO2 > 8%
+
+**Basicity Calculation**:
+```
+Binary Basicity (B2) = CaO% / SiO2%
+Quaternary Basicity (B4) = (CaO% + MgO%) / (SiO2% + Al2O3%)
+```
+
+### 7.4 Bunker Configuration for BF Mode
+
+#### 7.4.1 Bunker vs. Silo Terminology
+**Standard Mode**: Uses "silos" with kg units
+**BF Mode**: Uses "bunkers" with volume units (m³)
+
+**Conversion**:
+```
+Mass (kg) = Volume (m³) × Density (kg/m³)
+Flow Rate (kg/s) = Flow Rate (t/h) × 1000 / 3600
+```
+
+#### 7.4.2 Typical BF Bunker Configuration
+
+**Example Burden Distribution**:
+- **Iron-bearing materials**: 70-80% (Pellets, Sinter, Lump Ore)
+- **Flux materials**: 15-25% (Limestone, Dolomite)
+- **Additives**: 5-10% (Quartzite, special additives)
+
+**Sample BF Bunker Setup**:
+
+| Material | Volume (m³) | Flow (t/h) | Position | Start Time | Purpose |
+|----------|-------------|------------|----------|------------|---------|
+| Pellets | 80 | 120 | 5m | 0s | Primary iron source |
+| Sinter | 60 | 90 | 15m | 0s | Secondary iron source |
+| Lump Ore | 40 | 60 | 25m | 30s | Iron ore supplement |
+| Limestone | 25 | 30 | 35m | 0s | Basicity control |
+| Dolomite | 15 | 18 | 40m | 60s | MgO source |
+
+#### 7.4.3 Bunker Sequencing Strategies
+
+**Strategy 1: Continuous Blending**
+- All bunkers start simultaneously
+- Maintains steady chemistry
+- Simplest control strategy
+
+**Strategy 2: Staged Introduction**
+- Base materials first
+- Fluxes added to control chemistry
+- Allows chemistry adjustment
+
+**Strategy 3: Campaign Charging**
+- Different material combinations for different periods
+- Optimizes furnace performance
+- Requires careful planning
+
+### 7.5 Running BF Mode Simulations
+
+#### 7.5.1 BF-Specific Validation
+Additional checks for BF Mode:
+- Chemistry data completeness
+- Reasonable basicity values (0.5-3.0)
+- Realistic flow rates for BF operations
+- Material compatibility
+
+#### 7.5.2 Enhanced Simulation Process
+1. **Standard Flow Calculation**: Same as Standard Mode
+2. **Chemistry Tracking**: Weighted averages calculated
+3. **Basicity Monitoring**: Real-time B2 and B4 calculation
+4. **Quality Assessment**: Stability and target compliance
+5. **Enhanced Results**: Chemistry trends and statistics
+
+#### 7.5.3 BF Simulation Performance
+**Memory Usage**: 20-50% higher than Standard Mode
+**Computation Time**: 10-30% longer due to chemistry calculations
+**Result Size**: Larger due to chemistry time series data
+
+### 7.6 Understanding BF Mode Results
+
+#### 7.6.1 Chemistry Trends Overview
+BF Mode provides 6 time-series plots showing weighted average chemistry at the conveyor discharge point:
+
+**Plot Layout**: 2×3 grid for comprehensive chemistry monitoring
+
+#### 7.6.2 Fe Content Trends
+**Plot Characteristics**:
+- Red line showing Fe% over time
+- Target range highlighted (58-66%)
+- Quality indicator based on stability
+
+**Interpretation**:
+- Steady line indicates consistent iron grade
+- Variations show impact of different materials
+- Target range compliance critical for furnace operation
+
+**Quality Criteria**:
+- **Good**: Fe content stable within ±2%
+- **Poor**: High variation or outside target range
+
+#### 7.6.3 SiO2 Content Trends
+**Plot Characteristics**:
+- Blue line showing SiO2% over time
+- Target range highlighted (4-8%)
+- Affects basicity calculations
+
+**Interpretation**:
+- Lower SiO2 generally preferred
+- Must be balanced with CaO for proper basicity
+- High SiO2 requires more flux addition
+
+#### 7.6.4 CaO Content Trends
+**Plot Characteristics**:
+- Green line showing CaO% over time
+- Typical range indicated
+- Key component for basicity control
+
+**Interpretation**:
+- CaO level affects slag formation
+- Must be sufficient for target basicity
+- Limestone addition increases CaO
+
+#### 7.6.5 MgO Content Trends
+**Plot Characteristics**:
+- Purple line showing MgO% over time
+- Target range highlighted (0.5-3%)
+- Important for refractory protection
+
+**Interpretation**:
+- MgO improves slag fluidity
+- Protects furnace lining
+- Dolomite is primary source
+
+#### 7.6.6 Al2O3 Content Trends
+**Plot Characteristics**:
+- Orange line showing Al2O3% over time
+- Target range highlighted (1-3%)
+- Affects slag properties
+
+**Interpretation**:
+- High Al2O3 increases slag viscosity
+- Should be controlled within limits
+- Can cause operational difficulties
+
+#### 7.6.7 Basicity (B2) Trends
+**Plot Characteristics**:
+- Purple line showing CaO/SiO2 ratio
+- Target line at B2 = 1.1
+- Acceptable range (1.0-1.2) highlighted
+
+**Interpretation**:
+- Critical parameter for BF operation
+- B2 = 1.1 is typical target
+- Deviations affect slag formation and furnace performance
+
+**Quality Assessment**:
+- **Good**: Average B2 within 1.0-1.2, low variation
+- **Poor**: Outside target range or high instability
+
+### 7.7 Bunker Chemistry Visualization
+
+#### 7.7.1 Opening Bunker Window
+1. Go to menu: **Blast Furnace → Bunker Chemistry Visualization**
+2. New window opens with bunker simulation tools
+3. Independent of main simulation window
+
+#### 7.7.2 Bunker Window Components
+
+**Left Panel**:
+- Materials definition (linked to main window)
+- Charging sequence builder
+- Bunker parameters (diameter, height)
+
+**Right Panel**:
+- Material stratification visualization
+- Layer chemistry display
+- Update and export controls
+
+#### 7.7.3 Charging Sequence Simulation
+1. **Select Material**: Choose from chemistry database
+2. **Set Volume**: Enter m³ of material to add
+3. **Add to Sequence**: Build charging timeline
+4. **Run Charging**: Execute sequence and visualize layers
+
+#### 7.7.4 Bunker Visualization Features
+- **Layer Stratification**: Visual representation of material layers
+- **Chemistry Labels**: Fe% and volume for each layer
+- **Color Coding**: Different colors for different materials
+- **Fill Level**: Percentage fill indicator
+- **Discharge Prediction**: Chemistry of next charges
+
+### 7.8 BF Mode Quality Control
+
+#### 7.8.1 Real-Time Monitoring
+The chemistry trends provide real-time feedback on:
+- **Composition Stability**: Variation in key elements
+- **Target Compliance**: Adherence to desired ranges
+- **Trend Detection**: Early warning of deviations
+- **Quality Prediction**: Forecast of blend properties
+
+#### 7.8.2 Quality Indicators
+
+**Fe Content Stability**:
+- Standard deviation < 2.0% = Good
+- Standard deviation ≥ 2.0% = Poor
+
+**Basicity Control**:
+- Average B2 within 1.0-1.2 = Good
+- Average B2 outside range = Poor
+
+**Overall Assessment**:
+- All indicators Good = Excellent operation
+- Mixed indicators = Acceptable operation
+- Multiple Poor indicators = Requires attention
+
+#### 7.8.3 Corrective Actions
+
+**High Fe Variation**:
+- Check material quality consistency
+- Adjust feeding sequence
+- Consider blending strategies
+
+**Basicity Too Low (< 1.0)**:
+- Increase limestone flow
+- Reduce quartzite addition
+- Add high-CaO materials
+
+**Basicity Too High (> 1.2)**:
+- Reduce limestone flow
+- Add SiO2-bearing materials
+- Adjust material proportions
+
+### 7.9 Advanced BF Applications
+
+#### 7.9.1 Burden Optimization
+Use BF Mode to:
+- Optimize material proportions
+- Minimize chemistry variation
+- Target specific basicity ranges
+- Reduce flux consumption
+
+#### 7.9.2 Process Control
+Implement:
+- Feed-forward control strategies
+- Chemistry prediction models
+- Quality monitoring systems
+- Automated burden adjustment
+
+#### 7.9.3 Operational Planning
+Plan:
+- Material procurement strategies
+- Inventory management
+- Campaign scheduling
+- Quality assurance protocols
+
+---
+
+## 8. Advanced Features
+
+### 8.1 Simulation Optimization
+
+#### 8.1.1 Parameter Sensitivity Analysis
+Understanding how different parameters affect results:
+
+**Conveyor Velocity Impact**:
+- Higher velocity → shorter residence time
+- Lower velocity → more blending opportunity
+- Optimal velocity balances throughput and mixing
+
+**Resolution Size Effects**:
+- Smaller resolution → higher accuracy, longer computation
+- Larger resolution → faster computation, potential accuracy loss
+- Rule of thumb: Resolution ≤ Conveyor Length / 50
+
+**Material Flow Rate Optimization**:
+```
+Optimal Flow Rate = Target Throughput / Number of Active Silos
+Consider: Material availability, silo capacity, feeding constraints
+```
+
+#### 8.1.2 Multi-Scenario Analysis
+**Scenario Planning Workflow**:
+1. Create base case simulation
+2. Save as reference case
+3. Modify one parameter at a time
+4. Document results and compare
+5. Identify optimal configuration
+
+**Example Scenarios**:
+- Different material proportions (70/30 vs 80/20)
+- Various feeding sequences (simultaneous vs staged)
+- Alternative conveyor speeds (1.5 vs 2.0 vs 2.5 m/s)
+- Different silo positioning strategies
+
+#### 8.1.3 Design of Experiments (DOE)
+**Systematic Parameter Variation**:
+
+| Run | Velocity (m/s) | Material Ratio | Start Delay (s) | Result Quality |
+|-----|----------------|----------------|-----------------|----------------|
+| 1 | 1.5 | 70/30 | 0 | Baseline |
+| 2 | 2.0 | 70/30 | 0 | +10% throughput |
+| 3 | 2.5 | 70/30 | 0 | +15% throughput |
+| 4 | 2.0 | 80/20 | 0 | Different chemistry |
+| 5 | 2.0 | 70/30 | 30 | Improved mixing |
+
+### 8.2 Data Analysis and Statistics
+
+#### 8.2.1 Statistical Analysis Tools
+
+**Built-in Statistics** (BF Mode):
+- Mean values for all chemistry components
+- Standard deviations (stability indicators)
+- Minimum and maximum values
+- Quality indicators based on industry standards
+
+**Advanced Analysis** (Manual calculation):
+```
+Coefficient of Variation = (Standard Deviation / Mean) × 100%
+< 5% = Excellent stability
+5-10% = Good stability
+> 10% = Poor stability
+```
+
+#### 8.2.2 Trend Analysis
+
+**Moving Averages**:
+- Smooth short-term fluctuations
+- Identify long-term trends
+- Useful for process control
+
+**Correlation Analysis**:
+- Relationship between different chemistry components
+- Impact of material changes on overall chemistry
+- Predictive modeling potential
+
+#### 8.2.3 Performance Metrics
+
+**Standard Mode Metrics**:
+- Total material throughput (kg)
+- Average flow rate (kg/s)
+- Material utilization efficiency (%)
+- Mass balance accuracy (%)
+
+**BF Mode Metrics**:
+- Chemistry stability indices
+- Target range compliance (%)
+- Basicity control effectiveness
+- Material quality scores
+
+### 8.3 Customization and Configuration
+
+#### 8.3.1 Configuration File Management
+
+**Location**: `config/default_config.json`
+
+**Key Configuration Parameters**:
+```json
+{
+  "simulation": {
+    "default_total_time": 150.0,
+    "default_conveyor_length": 50.0,
+    "default_resolution_size": 1.0,
+    "default_conveyor_velocity": 2.0
+  },
+  "ui": {
+    "window_width": 1400,
+    "window_height": 800,
+    "theme": "default"
+  },
+  "validation": {
+    "min_capacity": 1.0,
+    "max_capacity": 999999.0,
+    "min_flow_rate": 0.01,
+    "max_flow_rate": 1000.0
+  }
+}
+```
+
+#### 8.3.2 Custom Material Libraries
+
+**Creating Material Presets**:
+1. Define materials in BF mode
+2. Export material definitions
+3. Create custom configuration files
+4. Load for specific applications
+
+**Industry-Specific Presets**:
+- Steel industry materials
+- Cement industry raw materials
+- Mining operation materials
+- Chemical processing materials
+
+#### 8.3.3 User Interface Customization
+
+**Window Layout**:
+- Adjustable splitter positions
+- Resizable plot areas
+- Configurable default sizes
+
+**Plot Customization**:
+- Color schemes for different materials
+- Line styles and markers
+- Axis scaling and labels
+- Export formats and quality
+
+### 8.4 Integration Capabilities
+
+#### 8.4.1 Data Import/Export
+
+**Supported Formats**:
+- CSV files for material data
+- JSON for configuration
+- Excel files (with pandas)
+- Custom XML formats
+
+**Export Capabilities**:
+- Simulation results (CSV)
+- Chemistry reports (CSV, Excel)
+- Plot images (PNG, PDF, SVG)
+- Configuration backups
+
+#### 8.4.2 API Integration Potential
+
+**Future Development**:
+- REST API for remote control
+- Database connectivity
+- Real-time data feeds
+- Process control system integration
+
+#### 8.4.3 Scripting and Automation
+
+**Python Scripting**:
+```python
+# Example automation script
+from src.simulation.engine import SimulationEngine
+from src.models.simulation_data import SimulationParameters
+
+# Automated parameter sweep
+velocities = [1.5, 2.0, 2.5, 3.0]
+results = {}
+
+for velocity in velocities:
+    params = SimulationParameters(
+        total_time=150,
+        conveyor_velocity=velocity,
+        # ... other parameters
+    )
+    engine = SimulationEngine()
+    result = engine.run_simulation(params)
+    results[velocity] = result
+```
+
+### 8.5 Quality Assurance Features
+
+#### 8.5.1 Validation Framework
+
+**Input Validation**:
+- Parameter range checking
+- Material compatibility verification
+- Physics-based constraint validation
+- Error prevention and user guidance
+
+**Result Validation**:
+- Mass balance verification
+- Chemistry conservation checking
+- Physical realism assessment
+- Statistical significance testing
+
+#### 8.5.2 Error Detection and Handling
+
+**Common Error Categories**:
+1. **Configuration Errors**: Invalid parameters, missing data
+2. **Runtime Errors**: Numerical instabilities, memory issues
+3. **Results Errors**: Unphysical results, calculation errors
+4. **User Errors**: Incorrect inputs, misunderstanding
+
+**Error Recovery**:
+- Graceful degradation
+- Fallback calculations
+- User-friendly error messages
+- Suggested corrective actions
+
+#### 8.5.3 Testing and Verification
+
+**Unit Testing**:
+- Individual component testing
+- Algorithm verification
+- Edge case handling
+- Performance benchmarking
+
+**Integration Testing**:
+- End-to-end workflow testing
+- Cross-platform compatibility
+- User interface testing
+- Data integrity verification
+
+---
+
+## 9. File Management
+
+### 9.1 Case File Structure
+
+#### 9.1.1 File Format
+The application uses JSON format for case files, providing:
+- Human-readable text format
+- Cross-platform compatibility
+- Version control friendly
+- Easy backup and sharing
+
+#### 9.1.2 Case File Components
+
+**Standard Mode Case File**:
+```json
+{
+  "version": "1.0",
+  "mode": "standard",
+  "created": "2025-08-12T10:30:00Z",
+  "parameters": {
+    "total_time": 150.0,
+    "conveyor_length": 50.0,
+    "resolution_size": 1.0,
+    "conveyor_velocity": 2.0
+  },
+  "materials": [
+    "Lump_Ore",
+    "Sinter",
+    "Limestone"
+  ],
+  "silos": [
+    {
+      "material": "Lump_Ore",
+      "capacity": 1000.0,
+      "flow_rate": 5.0,
+      "material_position": 0,
+      "silo_position": 10,
+      "start_time": 0.0
+    }
+  ]
+}
+```
+
+**BF Mode Case File** (Extended):
+```json
+{
+  "version": "1.0",
+  "mode": "bf",
+  "created": "2025-08-12T10:30:00Z",
+  "parameters": { /* same as standard */ },
+  "materials": [ /* standard material names */ ],
+  "silos": [ /* standard silo data */ ],
+  "bf_parameters": { /* BF-specific parameters */ },
+  "bf_materials": {
+    "Pellets": {
+      "chemistry": {
+        "Fe": 65.5,
+        "SiO2": 4.2,
+        "CaO": 0.5,
+        "MgO": 0.3,
+        "Al2O3": 0.8
+      },
+      "density": 2200,
+      "color": "#8B4513"
+    }
+  },
+  "bf_silos": [ /* BF bunker configurations */ ]
+}
+```
+
+### 9.2 File Operations
+
+#### 9.2.1 Creating New Cases
+**Menu**: File → New (Ctrl+N)
+
+**Process**:
+1. Confirmation dialog if unsaved changes exist
+2. Reset all input fields to defaults
+3. Clear all tables
+4. Clear all plots
+5. Reset to Standard Mode
+6. Update status bar
+
+**Best Practices**:
+- Save current work before creating new case
+- Use descriptive names for new cases
+- Start with template cases when possible
+
+#### 9.2.2 Opening Existing Cases
+**Menu**: File → Open (Ctrl+O)
+
+**Process**:
+1. File browser dialog
+2. File format validation
+3. Version compatibility check
+4. Data loading and validation
+5. UI update with loaded data
+6. Mode switching if necessary
+
+**Supported Locations**:
+- Local file system
+- Network drives
+- Cloud storage (if mounted)
+- Recent files list
+
+#### 9.2.3 Saving Cases
+**Menu**: File → Save (Ctrl+S) or Save As (Ctrl+Shift+S)
+
+**Save Process**:
+1. Collect all current settings
+2. Validate data completeness
+3. Format data as JSON
+4. Write to file with backup
+5. Update window title
+6. Confirm save success
+
+**Auto-Save Features**:
+- Periodic background saves (configurable)
+- Recovery files for crash protection
+- Version history maintenance
+
+#### 9.2.4 File Naming Conventions
+
+**Recommended Naming**:
+```
+ProjectName_Description_Date.json
+Examples:
+- SteelPlant_BaseCase_20250812.json
+- BlastFurnace_HighGradePellets_20250812.json
+- MiningOp_Campaign1_20250812.json
+```
+
+**Avoid**:
+- Spaces in filenames
+- Special characters (/ \ : * ? " < > |)
+- Very long names (> 50 characters)
+
+### 9.3 File Organization
+
+#### 9.3.1 Directory Structure
+**Recommended Organization**:
+```
+Projects/
+├── Steel_Plant_Study/
+│   ├── Base_Cases/
+│   │   ├── Standard_Operation.json
+│   │   └── Peak_Production.json
+│   ├── Optimization_Cases/
+│   │   ├── Velocity_Study/
+│   │   └── Material_Ratio_Study/
+│   └── Final_Results/
+├── Mining_Operation/
+└── Research_Projects/
+```
+
+#### 9.3.2 Version Control
+**Manual Versioning**:
+- Use date stamps in filenames
+- Maintain changelog in separate file
+- Archive old versions regularly
+
+**Git Integration** (Advanced):
+- Track case files in version control
+- Collaborate on simulation studies
+- Maintain project history
+
+#### 9.3.3 Backup Strategies
+**Local Backups**:
+- Daily automated backups
+- Multiple backup locations
+- Regular backup verification
+
+**Cloud Backups**:
+- Sync with cloud storage
+- Cross-platform accessibility
+- Disaster recovery protection
+
+### 9.4 Import/Export Features
+
+#### 9.4.1 Material Data Import
+**CSV Format for Materials**:
+```csv
+Material,Fe%,SiO2%,CaO%,MgO%,Al2O3%,Density,Color
+Pellets,65.5,4.2,0.5,0.3,0.8,2200,#8B4513
+Sinter,57.2,9.8,9.5,1.2,1.8,1900,#CD853F
+```
+
+**Import Process**:
+1. File → Import → Material Data
+2. Select CSV file
+3. Map columns to properties
+4. Validate chemistry data
+5. Add to material database
+
+#### 9.4.2 Silo Configuration Import
+**CSV Format for Silos**:
+```csv
+Material,Capacity,FlowRate,Position,StartTime
+Lump_Ore,1000,5.0,10,0
+Sinter,800,4.0,20,15
+Limestone,500,2.5,30,30
+```
+
+#### 9.4.3 Batch Processing
+**Multiple Case Processing**:
+1. Create template case file
+2. Generate parameter variations
+3. Run batch simulations
+4. Collect and analyze results
+
+### 9.5 File Troubleshooting
+
+#### 9.5.1 Common File Issues
+
+**Issue**: "File not found" error
+**Causes**: 
+- File moved or deleted
+- Network drive disconnected
+- Incorrect path
+
+**Solutions**:
+- Verify file location
+- Check network connectivity
+- Use "Browse" to relocate file
+
+**Issue**: "Invalid file format" error
+**Causes**:
+- Corrupted file
+- Wrong file type
+- Version incompatibility
+
+**Solutions**:
+- Check file extension (.json)
+- Verify file size (not 0 bytes)
+- Try backup copy
+
+**Issue**: "Permission denied" error
+**Causes**:
+- File is read-only
+- Insufficient user permissions
+- File in use by another program
+
+**Solutions**:
+- Check file properties
+- Run as administrator
+- Close other applications
+
+#### 9.5.2 Data Recovery
+**Recovery Options**:
+1. **Auto-save files**: Check temp directory
+2. **Backup copies**: Look for .bak files
+3. **Version history**: Use previous versions
+4. **Export from memory**: If application still running
+
+**Prevention**:
+- Regular saves (Ctrl+S)
+- Enable auto-save
+- Maintain backups
+- Use version control
+
+#### 9.5.3 File Validation
+**Validation Checks**:
+- JSON syntax validation
+- Data type verification
+- Range checking
+- Completeness assessment
+
+**Repair Procedures**:
+1. Identify error location
+2. Fix syntax if possible
+3. Restore from backup
+4. Recreate if necessary
+
+---
+
+## 10. Export and Reporting
+
+### 10.1 Standard Mode Export Options
+
+#### 10.1.1 Simulation Results Export
+**CSV Export Features**:
+- Time-series data for all materials
+- Flow rates and proportions
+- Statistical summaries
+- Configuration parameters
+
+**Export Format**:
+```csv
+Time [s],Lump_Ore_Flow [kg/s],Sinter_Flow [kg/s],Total_Flow [kg/s],Lump_Ore_%,Sinter_%
+0.0,5.0,0.0,5.0,100.0,0.0
+0.5,5.0,0.0,5.0,100.0,0.0
+15.0,5.0,4.0,9.0,55.6,44.4
+...
+```
+
+#### 10.1.2 Plot Export
+**Supported Formats**:
+- **PNG**: High-quality raster images
+- **PDF**: Vector format for publications
+- **SVG**: Scalable vector graphics
+- **EPS**: Encapsulated PostScript
+
+**Export Process**:
+1. Right-click on plot area
+2. Select "Save figure"
+3. Choose format and location
+4. Adjust quality settings
+5. Confirm export
+
+### 10.2 Blast Furnace Mode Reporting
+
+#### 10.2.1 Comprehensive Chemistry Report
+**Menu**: Blast Furnace → Export Chemistry Report
+
+**Report Sections**:
+
+**Section 1: Material Chemistry Definitions**
+```csv
+=== MATERIAL CHEMISTRY DEFINITIONS ===
+Material,Fe%,SiO2%,CaO%,MgO%,Al2O3%,Density (kg/m³),Basicity_B2
+Pellets,65.50,4.20,0.50,0.30,0.80,2200.0,0.119
+Sinter,57.20,9.80,9.50,1.20,1.80,1900.0,0.969
+...
+```
+
+**Section 2: Chemistry Time Series**
+```csv
+=== CHEMISTRY TIME SERIES AT CONVEYOR DISCHARGE ===
+Time (s),Weighted_Fe%,Weighted_SiO2%,Weighted_CaO%,Weighted_MgO%,Weighted_Al2O3%,Basicity_B2,Total_Flow (kg/s)
+0.0,65.50,4.20,0.50,0.30,0.80,0.119,5.00
+0.5,65.50,4.20,0.50,0.30,0.80,0.119,5.00
+...
+```
+
+**Section 3: Statistical Summary**
+```csv
+=== STATISTICAL SUMMARY ===
+Parameter,Average,Std Dev,Min,Max,Target,Quality
+Fe%,62.45,2.15,58.30,65.50,58-66%,Good
+SiO2%,6.20,1.80,4.20,9.80,4-8%,-
+Basicity B2,1.08,0.15,0.80,1.25,1.0-1.2,Good
+```
+
+**Section 4: Simulation Parameters**
+```csv
+=== SIMULATION PARAMETERS ===
+Parameter,Value,Unit
+Total Time,150.0,seconds
+Conveyor Length,50.0,meters
+Conveyor Velocity,2.0,m/s
+Mass Balance Error,0.023,%
+```
+
+#### 10.2.2 Quality Assessment Report
+**Quality Indicators**:
+- **Fe Stability**: Standard deviation < 2.0% = Good
+- **Basicity Control**: Average within 1.0-1.2 = Good
+- **Overall Assessment**: Summary of all indicators
+
+**Trend Analysis**:
+- Moving averages
+- Trend direction indicators
+- Correlation coefficients
+- Process capability indices
+
+#### 10.2.3 Operational Report
+**Production Summary**:
+- Total material processed (tons)
+- Average chemistry composition
+- Quality compliance percentage
+- Operational efficiency metrics
+
+**Material Consumption**:
+- Individual material usage
+- Cost analysis (if unit costs provided)
+- Inventory requirements
+- Procurement recommendations
+
+### 10.3 Custom Report Generation
+
+#### 10.3.1 Report Templates
+**Standard Templates**:
+- Daily production report
+- Quality control summary
+- Process optimization study
+- Equipment performance analysis
+
+**Template Structure**:
+```
+1. Executive Summary
+2. Simulation Overview
+3. Key Results
+4. Quality Assessment
+5. Recommendations
+6. Technical Details
+7. Appendices
+```
+
+#### 10.3.2 Automated Reporting
+**Batch Report Generation**:
+```python
+# Example automation script
+def generate_daily_report(simulation_results):
+    report = {
+        'date': today(),
+        'total_throughput': calculate_throughput(results),
+        'quality_metrics': assess_quality(results),
+        'recommendations': generate_recommendations(results)
+    }
+    export_to_pdf(report, 'daily_report.pdf')
+```
+
+#### 10.3.3 Report Customization
+**Configurable Elements**:
+- Company logos and headers
+- Custom quality thresholds
+- Specific chart types
+- Color schemes and branding
+- Units and conventions
+
+### 10.4 Data Integration
+
+#### 10.4.1 Database Export
+**Supported Databases**:
+- SQLite (local database files)
+- MySQL/MariaDB (network databases)
+- PostgreSQL (enterprise databases)
+- Microsoft SQL Server
+
+**Database Schema Example**:
+```sql
+CREATE TABLE simulation_results (
+    id INTEGER PRIMARY KEY,
+    timestamp DATETIME,
+    simulation_id VARCHAR(50),
+    time_point FLOAT,
+    material_name VARCHAR(50),
+    flow_rate FLOAT,
+    fe_content FLOAT,
+    sio2_content FLOAT,
+    cao_content FLOAT,
+    basicity FLOAT
+);
+```
+
+#### 10.4.2 API Integration
+**REST API Endpoints** (Future feature):
+```
+GET /api/simulations - List all simulations
+POST /api/simulations - Create new simulation
+GET /api/simulations/{id}/results - Get results
+POST /api/export/chemistry - Export chemistry data
+```
+
+#### 10.4.3 Real-time Data Streaming
+**Data Stream Format**:
+```json
+{
+    "timestamp": "2025-08-12T10:30:15Z",
+    "simulation_id": "BF_Campaign_001",
+    "chemistry": {
+        "Fe": 62.5,
+        "SiO2": 5.8,
+        "CaO": 6.2,
+        "basicity": 1.07
+    },
+    "flow_rate": 8.5,
+    "quality": "Good"
+}
+```
+
+### 10.5 Report Distribution
+
+#### 10.5.1 Email Integration
+**Automated Email Reports**:
+- Scheduled daily/weekly reports
+- Alert notifications for quality deviations
+- Summary reports for management
+- Technical reports for engineers
+
+#### 10.5.2 Web Dashboard
+**Dashboard Features**:
+- Real-time chemistry monitoring
+- Quality trend visualization
+- Alert status indicators
+- Historical data access
+
+#### 10.5.3 Mobile Access
+**Mobile-Friendly Reports**:
+- Responsive design for tablets/phones
+- Key metrics summary
+- Alert notifications
+- Quick access to critical data
+
+---
+
+## 11. Troubleshooting
+
+### 11.1 Common Issues and Solutions
+
+#### 11.1.1 Application Startup Problems
+
+**Issue**: Application won't start
+**Symptoms**: 
+- Command line error messages
+- No window appears
+- Immediate crash
+
+**Diagnostic Steps**:
+1. Check Python version: `python --version`
+2. Verify dependencies: `pip list | grep PyQt5`
+3. Test in console:
+   ```python
+   import PyQt5
+   import matplotlib
+   import numpy
+   print("All imports successful")
+   ```
+
+**Solutions**:
+- **Missing PyQt5**: `pip install PyQt5`
+- **Wrong Python version**: Upgrade to Python 3.7+
+- **Virtual environment**: Activate correct environment
+- **PATH issues**: Verify Python installation path
+
+**Issue**: "ImportError: No module named..."
+**Solutions**:
+```bash
+# Install missing packages
+pip install PyQt5 matplotlib numpy
+
+# Check virtual environment
+source conveyor_env/bin/activate  # Linux/Mac
+conveyor_env\Scripts\activate     # Windows
+
+# Verify installation
+python -c "import PyQt5; print('PyQt5 OK')"
+```
+
+#### 11.1.2 Simulation Execution Problems
+
+**Issue**: "Validation Error" messages
+**Common Causes**:
+- No materials defined
+- No silos configured
+- Invalid parameter ranges
+- Inconsistent data
+
+**Solutions**:
+1. **Check Materials Table**:
+   - At least one material must be defined
+   - Material names cannot be empty
+   - No duplicate material names
+
+2. **Verify Silo Configuration**:
+   - At least one silo required
+   - All fields must be filled
+   - Flow rates must be positive
+   - Positions within conveyor length
+
+3. **Validate Parameters**:
+   - Simulation time > 0
+   - Conveyor length > 0
+   - Resolution size > 0 and ≤ conveyor length
+   - Conveyor velocity > 0
+
+**Issue**: Simulation runs but produces no flow
+**Causes**:
+- Start times beyond simulation time
+- Zero flow rates
+- Very large capacities with short simulation time
+
+**Diagnostic Questions**:
+- Does any silo start before simulation ends?
+- Are flow rates realistic for the time period?
+- Will any silo finish within simulation time?
+
+**Issue**: Memory errors during large simulations
+**Symptoms**:
+- "MemoryError" exceptions
+- Application freezing
+- System becoming unresponsive
+
+**Solutions**:
+- Reduce simulation time
+- Increase resolution size (fewer calculation points)
+- Close other applications
+- Upgrade system RAM
+- Break large simulations into smaller segments
+
+#### 11.1.3 Plot and Visualization Issues
+
+**Issue**: Empty or blank plots
+**Causes**:
+- No simulation results
+- Data calculation errors
+- Matplotlib backend issues
+
+**Solutions**:
+1. **Verify simulation completed successfully**
+2. **Check for error messages in console**
+3. **Try different matplotlib backend**:
+   ```python
+   import matplotlib
+   matplotlib.use('Qt5Agg')  # or 'TkAgg', 'Agg'
+   ```
+
+**Issue**: Plots not updating
+**Solutions**:
+- Click "Clear Plots" button
+- Re-run simulation
+- Restart application
+- Check plot widget initialization
+
+**Issue**: Poor plot quality or formatting
+**Solutions**:
+- Adjust figure size in configuration
+- Modify DPI settings for exports
+- Update matplotlib to latest version
+- Check display scaling settings
+
+#### 11.1.4 Blast Furnace Mode Issues
+
+**Issue**: BF mode not working
+**Symptoms**:
+- Cannot enable BF mode
+- Chemistry plots show "No data available"
+- BF menu items disabled
+
+**Diagnostic Steps**:
+1. Check if BF mode toggle is working
+2. Verify materials have chemistry data
+3. Confirm simulation runs in BF mode
+4. Check console for BF-specific errors
+
+**Solutions**:
+- Reload BF material presets
+- Verify chemistry data completeness
+- Check material-silo assignments
+- Restart application in BF mode
+
+**Issue**: Chemistry calculations incorrect
+**Verification Steps**:
+1. Manual calculation check:
+   ```
+   If 70% Material A (60% Fe) + 30% Material B (50% Fe)
+   Expected weighted Fe = 0.7 × 60 + 0.3 × 50 = 57%
+   ```
+2. Check material flow proportions
+3. Verify chemistry data entry
+4. Compare with expected values
+
+#### 11.1.5 File Operation Problems
+
+**Issue**: Cannot save files
+**Causes**:
+- Permission restrictions
+- Disk space limitations
+- File path issues
+- Read-only directories
+
+**Solutions**:
+- Check available disk space
+- Verify write permissions
+- Try different save location
+- Run application as administrator (Windows)
+
+**Issue**: Cannot open case files
+**Causes**:
+- File corruption
+- Version incompatibility
+- JSON syntax errors
+- Missing files
+
+**Solutions**:
+- Check file exists and is not empty
+- Verify JSON syntax with online validator
+- Try backup copy
+- Recreate from scratch if necessary
+
+### 11.2 Performance Optimization
+
+#### 11.2.1 Simulation Performance
+
+**Factors Affecting Performance**:
+- Simulation time length
+- Resolution size (number of segments)
+- Number of materials and silos
+- BF mode chemistry calculations
+
+**Optimization Strategies**:
+
+**Reduce Computational Load**:
+```
+Segments = Conveyor Length / Resolution Size
+Time Steps = Simulation Time / (Resolution Size / Velocity)
+Total Calculations = Segments × Time Steps × Materials
+```
+
+**Performance Guidelines**:
+| Simulation Size | Segments | Time Steps | Expected Time |
+|----------------|----------|------------|---------------|
+| Small | < 100 | < 200 | < 1 second |
+| Medium | 100-500 | 200-1000 | 1-5 seconds |
+| Large | 500-1000 | 1000-5000 | 5-30 seconds |
+| Very Large | > 1000 | > 5000 | > 30 seconds |
+
+**Memory Optimization**:
+- Monitor system resources
+- Close unused applications
+- Use appropriate resolution size
+- Consider 64-bit Python for large simulations
+
+#### 11.2.2 User Interface Performance
+
+**Responsiveness Issues**:
+- Long simulation blocking UI
+- Slow plot rendering
+- Delayed user input response
+
+**Solutions**:
+- Simulations run in background threads
+- Progress indicators show activity
+- Plot caching for faster updates
+- Async operations where possible
+
+**Plot Performance**:
+- Limit data points for very long simulations
+- Use data decimation for display
+- Cache rendered plots
+- Optimize matplotlib settings
+
+### 11.3 Debugging Tools
+
+#### 11.3.1 Console Output
+Enable detailed logging:
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+```
+
+**Debug Information Includes**:
+- Parameter validation results
+- Simulation progress updates
+- Memory usage statistics
+- Error stack traces
+
+#### 11.3.2 Built-in Diagnostics
+
+**System Information**:
+```python
+# Check system resources
+import psutil
+print(f"Available RAM: {psutil.virtual_memory().available / 1024**3:.1f} GB")
+print(f"CPU cores: {psutil.cpu_count()}")
+```
+
+**Simulation Diagnostics**:
+- Mass balance calculations
+- Matrix size information
+- Performance timing
+- Memory allocation
+
+#### 11.3.3 Data Validation Tools
+
+**Chemistry Validation** (BF Mode):
+```python
+def validate_chemistry(chemistry_dict):
+    total = sum(chemistry_dict.values())
+    if total > 100:
+        print(f"Warning: Total chemistry > 100% ({total:.1f}%)")
+    
+    for element, value in chemistry_dict.items():
+        if value < 0:
+            print(f"Error: Negative {element} content")
+        if value > 100:
+            print(f"Error: {element} content > 100%")
+```
+
+### 11.4 Getting Help
+
+#### 11.4.1 Built-in Help System
+- **Help Menu**: Basic application information
+- **BF Mode Guide**: Detailed blast furnace instructions
+- **About Dialog**: Version and contact information
+
+#### 11.4.2 Error Reporting
+**Information to Include**:
+- Application version
+- Operating system
+- Python version
+- Error message (exact text)
+- Steps to reproduce
+- Input files (if applicable)
+
+**Error Report Template**:
+```
+Application: Conveyor Blending Model v1.0
+OS: Windows 10 / macOS 12 / Ubuntu 20.04
+Python: 3.8.5
+PyQt5: 5.15.2
+
+Error Message:
+[Exact error text here]
+
+Steps to Reproduce:
+1. Launch application
+2. Enable BF mode
+3. Load default materials
+4. Run simulation
+5. Error occurs
+
+Additional Information:
+[Any other relevant details]
+```
+
+#### 11.4.3 Community Resources
+**Documentation**:
+- User manual (this document)
+- API documentation
+- Example cases
+- Tutorial videos
+
+**Support Channels**:
+- GitHub issues (bug reports)
+- User forums (discussions)
+- Email support (critical issues)
+- Documentation wiki
+
+### 11.5 Preventive Measures
+
+#### 11.5.1 Best Practices
+- **Regular Saves**: Save work frequently (Ctrl+S)
+- **Backup Strategy**: Maintain multiple backup copies
+- **Version Control**: Track changes to important cases
+- **Testing**: Verify results with known cases
+- **Documentation**: Keep notes on simulation setups
+
+#### 11.5.2 System Maintenance
+- **Software Updates**: Keep Python and packages updated
+- **Disk Cleanup**: Maintain adequate free disk space
+- **Memory Management**: Monitor system resources
+- **File Organization**: Maintain organized project structure
+
+#### 11.5.3 Quality Assurance
+- **Input Validation**: Double-check parameter values
+- **Result Verification**: Compare with expected outcomes
+- **Mass Balance**: Verify conservation laws
+- **Physical Realism**: Ensure results make sense
+
+---
+
+## 12. Technical Reference
+
+### 12.1 Mathematical Models
+
+#### 12.1.1 Material Flow Equations
+
+**Basic Flow Model**:
+The simulation uses a discrete material transport model where:
+
+```
+Material Matrix M(i,j,t) = amount of material i at position j at time t
+
+Transport Equation:
+M(i,j,t+dt) = M(i,j-v*dt,t) + S(i,j,t)*dt
+
+Where:
+- i = material index (0 to n_materials-1)
+- j = position index (0 to n_segments-1)  
+- t = time
+- v = conveyor velocity
+- dt = time step
+- S(i,j,t) = source term from silos
+```
+
+**Discrete Implementation**:
+```python
+# Shift materials by step_size positions
+step_size = int(velocity * dt / resolution_size)
+material_matrix[:, step_size:] = material_matrix[:, :-step_size]
+material_matrix[:, :step_size] = 0
+
+# Add new material from active silos
+for silo in active_silos:
+    quantity = silo.flow_rate * dt
+    material_matrix[silo.material_pos, silo.silo_pos] += quantity
+```
+
+#### 12.1.2 Chemistry Calculations (BF Mode)
+
+**Weighted Average Chemistry**:
+```
+C_avg(t) = Σ[C_i * F_i(t)] / Σ[F_i(t)]
+
+Where:
+- C_avg(t) = average chemistry at time t
+- C_i = chemistry of material i
+- F_i(t) = flow rate of material i at time t
+```
+
+**Basicity Calculations**:
+```
+Binary Basicity (B2) = CaO% / SiO2%
+Quaternary Basicity (B4) = (CaO% + MgO%) / (SiO2% + Al2O3%)
+```
+
+**Implementation**:
+```python
+def calculate_weighted_chemistry(flows, chemistry_db):
+    total_flow = sum(flows)
+    if total_flow == 0:
+        return None
+    
+    weighted_chemistry = {}
+    for element in ['Fe', 'SiO2', 'CaO', 'MgO', 'Al2O3']:
+        weighted_sum = 0
+        for i, material in enumerate(materials):
+            if flows[i] > 0:
+                weight = flows[i] / total_flow
+                weighted_sum += chemistry_db[material][element] * weight
+        weighted_chemistry[element] = weighted_sum
+    
+    return weighted_chemistry
+```
+
+#### 12.1.3 Mass Balance Validation
+
+**Conservation Check**:
+```
+Input Mass = Σ(silo_capacity_i)
+Output Mass = ∫(total_flow(t) * dt) from 0 to T
+Balance Error = |Input Mass - Output Mass| / Input Mass * 100%
+```
+
+**Acceptable Error**: < 0.1% for well-configured simulations
+
+#### 12.1.4 Statistical Calculations
+
+**Process Capability Indices**:
+```
+Cp = (USL - LSL) / (6 * σ)
+Cpk = min((USL - μ)/(3*σ), (μ - LSL)/(3*σ))
+
+Where:
+- USL = Upper Specification Limit
+- LSL = Lower Specification Limit  
+- μ = Process Mean
+- σ = Process Standard Deviation
+```
+
+### 12.2 Algorithm Implementation
+
+#### 12.2.1 Simulation Loop Structure
+
+```python
+def run_simulation(parameters):
+    # Initialize
+    dt = resolution_size / velocity
+    n_steps = int(total_time / dt)
+    material_matrix = zeros((n_materials, n_segments))
+    
+    # Main simulation loop
+    for step in range(n_steps):
+        time = step * dt
+        
+        # Add materials from active silos
+        for silo in silos:
+            if silo.is_active_at_time(time):
+                quantity = silo.flow_rate * dt
+                add_material(material_matrix, silo, quantity)
+        
+        # Record current state
+        flows = material_matrix[:, -1]  # End of conveyor
+        record_data(flows, time)
+        
+        # Transport materials
+        shift_materials(material_matrix, step_size)
+    
+    return results
+```
+
+#### 12.2.2 Matrix Operations
+
+**Efficient Material Shifting**:
+```python
+def shift_matrix_right(matrix, steps):
+    """Vectorized material transport"""
+    if steps <= 0:
+        return matrix.copy()
+    
+    rows, cols = matrix.shape
+    shifted = zeros_like(matrix)
+    
+    if steps < cols:
+        shifted[:, steps:] = matrix[:, :-steps]
+    
+    return shifted
+```
+
+**Memory Optimization**:
+- Use NumPy for vectorized operations
+- Pre-allocate arrays to avoid dynamic resizing
+- Use appropriate data types (float32 vs float64)
+- Clean up temporary arrays
+
+#### 12.2.3 Chemistry Tracking Algorithm
+
+```python
+class ChemistryTracker:
+    def __init__(self, n_materials, n_segments):
+        # Chemistry matrix: [materials, segments, components]
+        self.chemistry_matrix = zeros((n_materials, n_segments, 5))
+        self.components = ['Fe', 'SiO2', 'CaO', 'MgO', 'Al2O3']
+    
+    def add_chemistry(self, material_pos, silo_pos, quantity, chemistry):
+        """Add weighted chemistry to position"""
+        for i, component in enumerate(self.components):
+            self.chemistry_matrix[material_pos, silo_pos, i] += \
+                chemistry[component] * quantity
+    
+    def shift_chemistry(self, steps):
+        """Transport chemistry with materials"""
+        if steps > 0:
+            self.chemistry_matrix[:, steps:, :] = \
+                self.chemistry_matrix[:, :-steps, :]
+            self.chemistry_matrix[:, :steps, :] = 0
+```
+
+### 12.3 Data Structures
+
+#### 12.3.1 Core Classes
+
+**Material Class**:
+```python
+@dataclass
+class Material:
+    name: str
+    density: float
+    description: Optional[str] = None
+    chemistry: Optional[Dict[str, float]] = None
+    
+    def validate(self):
+        if self.density <= 0:
+            raise ValueError("Density must be positive")
+        if self.chemistry:
+            self.validate_chemistry()
+```
+
+**Silo Class**:
+```python
+@dataclass  
+class Silo:
+    material: str
+    capacity: float  # kg
+    flow_rate: float  # kg/s
+    material_position: int
+    silo_position: int  # meters
+    start_time: float  # seconds
+    
+    def is_active_at_time(self, time: float) -> bool:
+        return self.start_time <= time <= self.end_time()
+    
+    def end_time(self) -> float:
+        return self.start_time + (self.capacity / self.flow_rate)
+```
+
+**SimulationResults Class**:
+```python
+@dataclass
+class SimulationResults:
+    material_matrix: np.ndarray
+    flow_data: np.ndarray  
+    proportion_data: np.ndarray
+    parameters: SimulationParameters
+    metadata: Dict[str, Any]
+    chemistry_trends: Optional[Dict] = None
+    
+    @property
+    def time_steps(self) -> int:
+        return self.flow_data.shape[0]
+```
+
+#### 12.3.2 Configuration Management
+
+**Config Structure**:
+```python
+class ConfigManager:
+    def __init__(self, config_file: str):
+        self.config = self.load_config(config_file)
+    
+    def get(self, key: str, default=None):
+        """Get nested config value using dot notation"""
+        keys = key.split('.')
+        value = self.config
+        for k in keys:
+            value = value.get(k, {})
+        return value if value != {} else default
+```
+
+### 12.4 Performance Characteristics
+
+#### 12.4.1 Computational Complexity
+
+**Time Complexity**:
+- Standard simulation: O(n_steps × n_silos)
+- BF mode simulation: O(n_steps × n_silos × n_chemistry_components)
+- Matrix shifting: O(n_materials × n_segments)
+
+**Space Complexity**:
+- Material matrix: O(n_materials × n_segments)
+- Flow data: O(n_steps × n_materials)
+- Chemistry matrix (BF): O(n_materials × n_segments × 5)
+
+#### 12.4.2 Scaling Behavior
+
+**Linear Scaling Factors**:
+- Simulation time → time steps
+- Conveyor length → segments (with fixed resolution)
+- Number of materials → matrix width
+- Number of silos → processing time
+
+**Memory Scaling**:
+```
+Memory (MB) ≈ (n_materials × n_segments × 8 bytes) / 1,048,576
+For 10 materials, 100 segments: ~8 KB
+For 20 materials, 1000 segments: ~160 KB
+```
+
+#### 12.4.3 Optimization Techniques
+
+**Vectorization**:
+- NumPy operations instead of loops
+- Broadcasting for element-wise operations
+- Pre-allocated arrays
+
+**Memory Management**:
+- Efficient data types
+- Garbage collection optimization
+- Memory pooling for large simulations
+
+**Caching**:
+- Result caching for repeated calculations
+- Plot data caching
+- Configuration caching
+
+### 12.5 Validation and Testing
+
+#### 12.5.1 Unit Testing Framework
+
+**Test Categories**:
+- **Model Tests**: Mathematical correctness
+- **Integration Tests**: Component interaction
+- **Performance Tests**: Speed and memory
+- **Regression Tests**: Prevent functionality loss
+
+**Example Test**:
+```python
+class TestMaterialFlow(unittest.TestCase):
+    def test_single_silo_flow(self):
+        """Test basic material flow from one silo"""
+        # Setup
+        silo = Silo("TestMaterial", 100, 1.0, 0, 0, 0)
+        params = SimulationParameters(
+            total_time=50, conveyor_length=10, 
+            resolution_size=1.0, conveyor_velocity=1.0,
+            materials=["TestMaterial"], silos=[silo]
+        )
+        
+        # Execute
+        engine = SimulationEngine()
+        results = engine.run_simulation(params)
+        
+        # Verify
+        total_output = np.sum(results.flow_data[:, -1]) * dt
+        expected_output = min(100, 50 * 1.0)  # capacity or time*rate
+        self.assertAlmostEqual(total_output, expected_output, places=1)
+```
+
+#### 12.5.2 Validation Benchmarks
+
+**Physical Validation**:
+- Mass conservation (error < 0.1%)
+- Energy conservation (where applicable)
+- Momentum conservation (simplified)
+
+**Numerical Validation**:
+- Grid independence testing
+- Time step sensitivity analysis
+- Comparison with analytical solutions
+
+**Industrial Validation**:
+- Comparison with plant data
+- Expert review of results
+- Industry standard compliance
+
+---
+
+## 13. Best Practices
+
+### 13.1 Simulation Setup Best Practices
+
+#### 13.1.1 Parameter Selection Guidelines
+
+**Simulation Time**:
+```
+Recommended Time = Max(Silo Runtime) + 2 × Travel Time
+Travel Time = Conveyor Length / Velocity
+
+Example:
+- Longest silo: 200s runtime
+- Conveyor: 100m at 2 m/s → 50s travel time  
+- Recommended time: 200 + 2×50 = 300s
+```
+
+**Resolution Selection**:
+```
+High Accuracy: Resolution ≤ Conveyor Length / 100
+Standard: Resolution ≤ Conveyor Length / 50  
+Fast: Resolution ≤ Conveyor Length / 20
+
+Trade-off: Accuracy vs. Computation Time
+```
+
+**Velocity Guidelines**:
+- **Mining/Bulk Materials**: 1-4 m/s
+- **Manufacturing**: 0.5-2 m/s
+- **High-Speed Transport**: 5-15 m/s
+- **Laboratory Scale**: 0.1-1 m/s
+
+#### 13.1.2 Material Configuration
+
+**Material Naming**:
+- Use descriptive names: "Iron_Ore_65Fe" not "Material1"
+- Include key properties in name
+- Avoid spaces (use underscores)
+- Maintain consistent convention
+
+**BF Material Chemistry**:
+- Verify chemistry totals are reasonable (< 100%)
+- Use industry-standard analysis methods
+- Include all major components
+- Validate basicity calculations
+
+#### 13.1.3 Silo/Bunker Setup
+
+**Positioning Strategy**:
+```
+Minimum Spacing = 2 × Resolution Size
+Blending Points: Same position for multiple silos
+Sequential Addition: Staged positions along conveyor
+```
+
+**Flow Rate Selection**:
+- Consider physical limitations
+- Account for material properties
+- Plan for realistic operation
+- Verify total system capacity
+
+**Timing Strategy**:
+- **Simultaneous Start**: Steady-state operation
+- **Staged Start**: Composition control
+- **Campaign Operation**: Different periods, different materials
+
+### 13.2 Quality Control Practices
+
+#### 13.2.1 Input Validation
+
+**Pre-Simulation Checklist**:
+- [ ] All materials defined and named
+- [ ] Material chemistry complete (BF mode)
+- [ ] Silo configurations realistic
+- [ ] Parameter ranges appropriate
+- [ ] Total simulation time adequate
+- [ ] Mass balance expectations
+
+**Data Quality Checks**:
+```python
+def validate_input_data(parameters):
+    # Check material completeness
+    assert len(parameters.materials) > 0, "No materials defined"
+    
+    # Verify silo configuration
+    for silo in parameters.silos:
+        assert silo.flow_rate > 0, "Flow rate must be positive"
+        assert silo.capacity > 0, "Capacity must be positive"
+        assert silo.start_time >= 0, "Start time must be non-negative"
+    
+    # Check parameter consistency
+    assert parameters.resolution_size <= parameters.conveyor_length
+    assert parameters.total_time > 0
+```
+
+#### 13.2.2 Result Validation
+
+**Mass Balance Verification**:
+```python
+def check_mass_balance(results):
+    input_mass = sum(silo.capacity for silo in results.parameters.silos)
+    output_mass = np.trapz(results.flow_data[:, -1], 
+                          dx=results.metadata['dt'])
+    error = abs(input_mass - output_mass) / input_mass * 100
+    
+    if error > 0.5:
+        print(f"Warning: Mass balance error {error:.2f}%")
+    
+    return error < 0.1  # Good balance
+```
+
+**Physical Realism Checks**:
+- Flow rates within equipment capabilities
+- Chemistry values within expected ranges
+- Material proportions achievable
+- Timing sequences realistic
+
+**Statistical Validation**:
+- Chemistry stability within industry norms
+- Flow rate consistency
+- Trend analysis for unexpected behavior
+- Correlation analysis between variables
+
+#### 13.2.3 BF Mode Quality Assurance
+
+**Chemistry Validation**:
+```python
+def validate_bf_chemistry(chemistry_data):
+    for material, data in chemistry_data.items():
+        chem = data['chemistry']
+        
+        # Check iron content range
+        if not 0 <= chem['Fe'] <= 70:
+            print(f"Warning: {material} Fe content unusual: {chem['Fe']}%")
+        
+        # Check basicity
+        if chem['SiO2'] > 0:
+            basicity = chem['CaO'] / chem['SiO2']
+            if not 0.1 <= basicity <= 5.0:
+                print(f"Warning: {material} basicity unusual: {basicity:.2f}")
+```
+
+**Target Compliance**:
+- Fe content: 58-66% for furnace feed
+- Basicity (B2): 1.0-1.2 for optimal operation
+- MgO content: 0.5-3% for refractory protection
+- Al2O3 content: 1-3% for slag quality
+
+### 13.3 Workflow Optimization
+
+#### 13.3.1 Efficient Study Design
+
+**Sequential Approach**:
+1. **Base Case**: Establish reference simulation
+2. **Sensitivity Analysis**: Vary one parameter at a time
+3. **Optimization**: Identify best configurations
+4. **Validation**: Verify results with independent data
+
+**Parameter Study Matrix**:
+```
+Study: Conveyor Velocity Optimization
+Base Case: 2.0 m/s
+Variations: 1.5, 2.0, 2.5, 3.0 m/s
+Metrics: Throughput, Mixing Quality, Energy
+
+Study: Material Ratio Optimization  
+Base Case: 70% Ore, 30% Flux
+Variations: 60/40, 65/35, 70/30, 75/25, 80/20
+Metrics: Chemistry Stability, Cost, Quality
+```
+
+#### 13.3.2 Documentation Standards
+
+**Case Documentation**:
+```
+Case Name: [Project]_[Description]_[Date]
+Objective: What question does this answer?
+Setup: Key parameters and assumptions
+Results: Summary of findings
+Conclusions: What was learned?
+Next Steps: Follow-up studies needed
+```
+
+**Version Control**:
+- Use meaningful file names with dates
+- Maintain change logs
+- Archive old versions
+- Document parameter changes
+
+#### 13.3.3 Results Analysis
+
+**Comparative Analysis**:
+```python
+def compare_simulations(case1, case2):
+    comparison = {
+        'throughput_change': calculate_throughput_difference(case1, case2),
+        'chemistry_stability': compare_stability(case1, case2),
+        'efficiency_improvement': calculate_efficiency_gain(case1, case2)
+    }
+    return comparison
+```
+
+**Trend Identification**:
+- Moving averages for noise reduction
+- Correlation analysis between variables
+- Change point detection
+- Seasonal pattern recognition
+
+### 13.4 Industrial Implementation
+
+#### 13.4.1 Scaling from Simulation to Reality
+
+**Scale-Up Considerations**:
+- Material property variations in practice
+- Equipment limitations and constraints
+- Environmental factors (temperature, humidity)
+- Operational variability
+
+**Validation with Plant Data**:
+- Compare simulation predictions with measurements
+- Calibrate model parameters based on real data
+- Account for measurement uncertainties
+- Establish confidence intervals
+
+#### 13.4.2 Process Control Integration
+
+**Control Strategy Development**:
+```
+Feedforward Control:
+- Predict chemistry based on material feeds
+- Adjust flux additions proactively
+- Compensate for known disturbances
+
+Feedback Control:
+- Monitor discharge chemistry
+- Correct deviations from targets  
+- Implement closed-loop control
+```
+
+**Real-Time Implementation**:
+- Interface with plant control systems
+- Continuous model updates
+- Automatic parameter adjustment
+- Alert generation for operators
+
+#### 13.4.3 Maintenance and Updates
+
+**Regular Model Maintenance**:
+- Update material properties with new analyses
+- Calibrate parameters with recent plant data
+- Validate model predictions regularly
+- Document model changes and improvements
+
+**Continuous Improvement**:
+- Collect feedback from operators
+- Analyze model prediction accuracy
+- Identify areas for enhancement
+- Implement updates systematically
+
+### 13.5 Training and Education
+
+#### 13.5.1 User Training Program
+
+**Basic Training (2-4 hours)**:
+1. Application overview and capabilities
+2. Standard mode operation
+3. Basic simulation setup
+4. Results interpretation
+5. File management
+
+**Advanced Training (1-2 days)**:
+1. Blast furnace mode features
+2. Chemistry tracking and analysis
+3. Advanced visualization tools
+4. Quality control procedures
+5. Troubleshooting and optimization
+
+**Specialized Training**:
+- Industry-specific applications
+- Integration with plant systems
+- Advanced statistical analysis
+- Custom development
+
+#### 13.5.2 Educational Applications
+
+**Academic Use**:
+- Demonstrate material flow principles
+- Teach process control concepts
+- Illustrate optimization techniques
+- Provide hands-on simulation experience
+
+**Training Scenarios**:
+```
+Scenario 1: Basic Material Blending
+- Objective: Achieve target proportions
+- Challenge: Varying material availability
+- Learning: Flow control strategies
+
+Scenario 2: BF Chemistry Control  
+- Objective: Maintain target basicity
+- Challenge: Variable ore chemistry
+- Learning: Flux adjustment strategies
+
+Scenario 3: System Optimization
+- Objective: Maximize throughput
+- Challenge: Equipment constraints
+- Learning: Multi-objective optimization
+```| Material | Fe% | SiO2% | CaO% | MgO% | Al2O3% | Density (kg/m³) | Application |
+|----------|-----|-------|------|------|--------|----------------|-------------|
+| Pellets | 65.5 | 4.2 | 0.5 | 0.3 | 0.8 | 2200 | High-grade iron source |
+| Sinter | 57.2 | 9.8 | 9.5 | 1.2 | 1.8 | 1900 | Processed iron ore |
+| Lump Ore | 62.0 | 6.5 | 0.2 | 0.1 | 2.1 | 2500 | Natural iron ore |
+| Coke | 0.5 | 5.5 | 0.3 | 0.1 | 2.8 | 500 | Fuel and reducing agent |
+| Limestone | 0.5 | 2.0 | 52.0 | 2.5 | 0.8 | 1600 | Flux for basicity control |
+| Dolomite | 0.3 | 1.5 | 30.0 | 20.0 | 0.5 | 1700 | MgO source flux |
+| Quartzite | 0.2 | 95.0 | 0.5 | 0.1 | 2.0 | 1650 | SiO2 adjustment |
+
+#### 7.3.2 Understanding Material Chemistry
+
+**Iron Content (Fe%)**:
+- Primary indicator of iron ore quality
+- Target range: 58-66% for furnace feed
+- Higher Fe content improves furnace productivity
+- Pellets typically have highest Fe content
+
+**Silica Content (SiO2%)**:
+- Forms slag with fluxes
+- Target range: 4-8% in furnace burden
+- Must be balanced with CaO for proper basicity
+- Quartzite used for SiO2 adjustment
+
+**Lime Content (CaO%)**:
+- Essential for slag formation
+- Controls basicity (CaO/SiO2 ratio)
+- Target basicity: 1.0-1.2
+- Limestone and sinter are main CaO sources
+
+**Magnesia Content (MgO%)**:
+- Improves slag fluidity
+- Protects furnace refractory
+- Target range: 0.5-3%
+- Dolomite is primary MgO source
+
+**Alumina Content (Al2O3%)**:
+- Affects slag viscosity
+- Should be controlled within limits
+- Target range: 1-3%
+- High Al2O3 can cause operational problems
+
+#### 7.3.3 Adding Custom BF Materials
+
+1. **Click "Add Material"** in materials table
+2. **Enter Material Properties**:
+   - Descriptive name (e.g., "High_Grade_Pellets")
+   - Chemistry values (Fe%, SiO2%, CaO%, MgO%, Al2O3%)
+   - Bulk density (kg/m³)
+   - Color for visualization (hex code)
+
+3. **Validation Rules**:
+   - Fe content: 0-70%
+   - Other oxides: 0-100%
+   - Total chemistry should be reasonable (sum < 100%)
+   - Density: 500-3000 kg/m³ for typical materials
+
+#### 7.3.4 Material Quality Assessment
+
+**Quality Indicators**:
+- **Premium Grade**: Fe > 65%, SiO2 < 5%
+- **Standard Grade**: Fe 58-65%, SiO2 5-8%
+- **Low Grade**: Fe < 58%, SiO2 > 8%
+
+**Basicity Calculation**:
+```
+Binary Basicity (B2) = CaO% / SiO2%
+Quaternary Basicity (B4) = (CaO% + MgO%) / (SiO2% + Al2O3%)
+```
+
+### 7.4 Bunker Configuration for BF Mode
+
+#### 7.4.1 Bunker vs. Silo Terminology
+**Standard Mode**: Uses "silos" with kg units
+**BF Mode**: Uses "bunkers" with volume units (m³)
+
+**Conversion**:
+```
+Mass (kg) = Volume (m³) × Density (kg/m³)
+Flow Rate (kg/s) = Flow Rate (t/h) × 1000 / 3600
+```
+
+#### 7.4.2 Typical BF Bunker Configuration
+
+**Example Burden Distribution**:
+- **Iron-bearing materials**: 70-80% (Pellets, Sinter, Lump Ore)
+- **Flux materials**: 15-25% (Limestone, Dolomite)
+- **Additives**: 5-10% (Quartzite, special additives)
+
+**Sample BF Bunker Setup**:
+
+| Material | Volume (m³) | Flow (t/h) | Position | Start Time | Purpose |
+|----------|-------------|------------|----------|------------|---------|
+| Pellets | 80 | 120 | 5m | 0s | Primary iron source |
+| Sinter | 60 | 90 | 15m | 0s | Secondary iron source |
+| Lump Ore | 40 | 60 | 25m | 30s | Iron ore supplement |
+| Limestone | 25 | 30 | 35m | 0s | Basicity control |
+| Dolomite | 15 | 18 | 40m | 60s | MgO source |
+
+#### 7.4.3 Bunker Sequencing Strategies
+
+**Strategy 1: Continuous Blending**
+- All bunkers start simultaneously
+- Maintains steady chemistry
+- Simplest control strategy
+
+**Strategy 2: Staged Introduction**
+- Base materials first
+- Fluxes added to control chemistry
+- Allows chemistry adjustment
+
+**Strategy 3: Campaign Charging**
+- Different material combinations for different periods
+- Optimizes furnace performance
+- Requires careful planning
+
+### 7.5 Running BF Mode Simulations
+
+#### 7.5.1 BF-Specific Validation
+Additional checks for BF Mode:
+- Chemistry data completeness
+- Reasonable basicity values (0.5-3.0)
+- Realistic flow rates for BF operations
+- Material compatibility
+
+#### 7.5.2 Enhanced Simulation Process
+1. **Standard Flow Calculation**: Same as Standard Mode
+2. **Chemistry Tracking**: Weighted averages calculated
+3. **Basicity Monitoring**: Real-time B2 and B4 calculation
+4. **Quality Assessment**: Stability and target compliance
+5. **Enhanced Results**: Chemistry trends and statistics
+
+#### 7.5.3 BF Simulation Performance
+**Memory Usage**: 20-50% higher than Standard Mode
+**Computation Time**: 10-30% longer due to chemistry calculations
+**Result Size**: Larger due to chemistry time series data
+
+### 7.6 Understanding BF Mode Results
+
+#### 7.6.1 Chemistry Trends Overview
+BF Mode provides 6 time-series plots showing weighted average chemistry at the conveyor discharge point:
+
+**Plot Layout**: 2×3 grid for comprehensive chemistry monitoring
+
+#### 7.6.2 Fe Content Trends
+**Plot Characteristics**:
+- Red line showing Fe% over time
+- Target range highlighted (58-66%)
+- Quality indicator based on stability
+
+**Interpretation**:
+- Steady line indicates consistent iron grade
+- Variations show impact of different materials
+- Target range compliance critical for furnace operation
+
+**Quality Criteria**:
+- **Good**: Fe content stable within ±2%
+- **Poor**: High variation or outside target range
+
+#### 7.6.3 SiO2 Content Trends
+**Plot Characteristics**:
+- Blue line showing SiO2% over time
+- Target range highlighted (4-8%)
+- Affects basicity calculations
+
+**Interpretation**:
+- Lower SiO2 generally preferred
+- Must be balanced with CaO for proper basicity
+- High SiO2 requires more flux addition
+
+#### 7.6.4 CaO Content Trends
+**Plot Characteristics**:
+- Green line showing CaO% over time
+- Typical range indicated
+- Key component for basicity control
+
+**Interpretation**:
+- CaO level affects slag formation
+- Must be sufficient for target basicity
+- Limestone addition increases CaO
+
+#### 7.6.5 MgO Content Trends
+**Plot Characteristics**:
+- Purple line showing MgO% over time
+- Target range highlighted (0.5-3%)
+- Important for refractory protection
+
+**Interpretation**:
+- MgO improves slag fluidity
+- Protects furnace lining
+- Dolomite is primary source
+
+#### 7.6.6 Al2O3 Content Trends
+**Plot Characteristics**:
+- Orange line showing Al2O3% over time
+- Target range highlighted (1-3%)
+- Affects slag properties
+
+**Interpretation**:
+- High Al2O3 increases slag viscosity
+- Should be controlled within limits
+- Can cause operational difficulties
+
+#### 7.6.7 Basicity (B2) Trends
+**Plot Characteristics**:
+- Purple line showing CaO/SiO2 ratio
+- Target line at B2 = 1.1
+- Acceptable range (1.0-1.2) highlighted
+
+**Interpretation**:
+- Critical parameter for BF operation
+- B2 = 1.1 is typical target
+- Deviations affect slag formation and furnace performance
+
+**Quality Assessment**:
+- **Good**: Average B2 within 1.0-1.2, low variation
+- **Poor**: Outside target range or high instability
+
+### 7.7 Bunker Chemistry Visualization
+
+#### 7.7.1 Opening Bunker Window
+1. Go to menu: **Blast Furnace → Bunker Chemistry Visualization**
+2. New window opens with bunker simulation tools
+3. Independent of main simulation window
+
+#### 7.7.2 Bunker Window Components
+
+**Left Panel**:
+- Materials definition (linked to main window)
+- Charging sequence builder
+- Bunker parameters (diameter, height)
+
+**Right Panel**:
+- Material stratification visualization
+- Layer chemistry display
+- Update and export controls
+
+#### 7.7.3 Charging Sequence Simulation
+1. **Select Material**: Choose from chemistry database
+2. **Set Volume**: Enter m³ of material to add
+3. **Add to Sequence**: Build charging timeline
+4. **Run Charging**: Execute sequence and visualize layers
+
+#### 7.7.4 Bunker Visualization Features
+- **Layer Stratification**: Visual representation of material layers
+- **Chemistry Labels**: Fe% and volume for each layer
+- **Color Coding**: Different colors for different materials
+- **Fill Level**: Percentage fill indicator
+- **Discharge Prediction**: Chemistry of next charges
+
+### 7.8 BF Mode Quality Control
+
+#### 7.8.1 Real-Time Monitoring
+The chemistry trends provide real-time feedback on:
+- **Composition Stability**: Variation in key elements
+- **Target Compliance**: Adherence to desired ranges
+- **Trend Detection**: Early warning of deviations
+- **Quality Prediction**: Forecast of blend properties
+
+#### 7.8.2 Quality Indicators
+
+**Fe Content Stability**:
+- Standard deviation < 2.0% = Good
+- Standard deviation ≥ 2.0% = Poor
+
+**Basicity Control**:
+- Average B2 within 1.0-1.2 = Good
+- Average B2 outside range = Poor
+
+**Overall Assessment**:
+- All indicators Good = Excellent operation
+- Mixed indicators = Acceptable operation
+- Multiple Poor indicators = Requires attention
+
+#### 7.8.3 Corrective Actions
+
+**High Fe Variation**:
+- Check material quality consistency
+- Adjust feeding sequence
+- Consider blending strategies
+
+**Basicity Too Low (< 1.0)**:
+- Increase limestone flow
+- Reduce quartzite addition
+- Add high-CaO materials
+
+**Basicity Too High (> 1.2)**:
+- Reduce limestone flow
+- Add SiO2-bearing materials
+- Adjust material proportions
+
+### 7.9 Advanced BF Applications
+
+#### 7.9.1 Burden Optimization
+Use BF Mode to:
+- Optimize material proportions
+- Minimize chemistry variation
+- Target specific basicity ranges
+- Reduce flux consumption
+
+#### 7.9.2 Process Control
+Implement:
+- Feed-forward control strategies
+- Chemistry prediction models
+- Quality monitoring systems
+- Automated burden adjustment
+
+#### 7.9.3 Operational Planning
+Plan:
+- Material procurement strategies
+- Inventory management
+- Campaign scheduling
+- Quality assurance protocols
+
+---
+
+## 8. Advanced Features
+
+### 8.1 Simulation Optimization
+
+#### 8.1.1 Parameter Sensitivity Analysis
+Understanding how different parameters affect results:
+
+**Conveyor Velocity Impact**:
+- Higher velocity → shorter residence time
+- Lower velocity → more blending opportunity
+- Optimal velocity balances throughput and mixing
+
+**Resolution Size Effects**:
+- Smaller resolution → higher accuracy, longer computation
+- Larger resolution → faster computation, potential accuracy loss
+- Rule of thumb: Resolution ≤ Conveyor Length / 50
+
+**Material Flow Rate Optimization**:
+```
+Optimal Flow Rate = Target Throughput / Number of Active Silos
+Consider: Material availability, silo capacity, feeding constraints
+```
+
+#### 8.1.2 Multi-Scenario Analysis
+**Scenario Planning Workflow**:
+1. Create base case simulation
+2. Save as reference case
+3. Modify one parameter at a time
+4. Document results and compare
+5. Identify optimal configuration
+
+**Example Scenarios**:
+- Different material proportions (70/30 vs 80/20)
+- Various feeding sequences (simultaneous vs staged)
+- Alternative conveyor speeds (1.5 vs 2.0 vs 2.5 m/s)
+- Different silo positioning strategies
+
+#### 8.1.3 Design of Experiments (DOE)
+**Systematic Parameter Variation**:
+
+| Run | Velocity (m/s) | Material Ratio | Start Delay (s) | Result Quality |
+|-----|----------------|----------------|-----------------|----------------|
+| 1 | 1.5 | 70/30 | 0 | Baseline |
+| 2 | 2.0 | 70/30 | 0 | +10% throughput |
+| 3 | 2.5 | 70/30 | 0 | +15% throughput |
+| 4 | 2.0 | 80/20 | 0 | Different chemistry |
+| 5 | 2.0 | 70/30 | 30 | Improved mixing |
+
+### 8.2 Data Analysis and Statistics
+
+#### 8.2.1 Statistical Analysis Tools
+
+**Built-in Statistics** (BF Mode):
+- Mean values for all chemistry components
+- Standard deviations (stability indicators)
+- Minimum and maximum values
+- Quality indicators based on industry standards
+
+**Advanced Analysis** (Manual calculation):
+```
+Coefficient of Variation = (Standard Deviation / Mean) × 100%
+< 5% = Excellent stability
+5-10% = Good stability
+> 10% = Poor stability
+```
+
+#### 8.2.2 Trend Analysis
+
+**Moving Averages**:
+- Smooth short-term fluctuations
+- Identify long-term trends
+- Useful for process control
+
+**Correlation Analysis**:
+- Relationship between different chemistry components
+- Impact of material changes on overall chemistry
+- Predictive modeling potential
+
+#### 8.2.3 Performance Metrics
+
+**Standard Mode Metrics**:
+- Total material throughput (kg)
+- Average flow rate (kg/s)
+- Material utilization efficiency (%)
+- Mass balance accuracy (%)
+
+**BF Mode Metrics**:
+- Chemistry stability indices
+- Target range compliance (%)
+- Basicity control effectiveness
+- Material quality scores
+
+### 8.3 Customization and Configuration
+
+#### 8.3.1 Configuration File Management
+
+**Location**: `config/default_config.json`
+
+**Key Configuration Parameters**:
+```json
+{
+  "simulation": {
+    "default_total_time": 150.0,
+    "default_conveyor_length": 50.0,
+    "default_resolution_size": 1.0,
+    "default_conveyor_velocity": 2.0
+  },
+  "ui": {
+    "window_width": 1400,
+    "window_height": 800,
+    "theme": "default"
+  },
+  "validation": {
+    "min_capacity": 1.0,
+    "max_capacity": 999999.0,
+    "min_flow_rate": 0.01,
+    "max_flow_rate": 1000.0
+  }
+}
+```
+
+#### 8.3.2 Custom Material Libraries
+
+**Creating Material Presets**:
+1. Define materials in BF mode
+2. Export material definitions
+3. Create custom configuration files
+4. Load for specific applications
+
+**Industry-Specific Presets**:
+- Steel industry materials
+- Cement industry raw materials
+- Mining operation materials
+- Chemical processing materials
+
+#### 8.3.3 User Interface Customization
+
+**Window Layout**:
+- Adjustable splitter positions
+- Resizable plot areas
+- Configurable default sizes
+
+**Plot Customization**:
+- Color schemes for different materials
+- Line styles and markers
+- Axis scaling and labels
+- Export formats and quality
+
+### 8.4 Integration Capabilities
+
+#### 8.4.1 Data Import/Export
+
+**Supported Formats**:
+- CSV files for material data
+- JSON for configuration
+- Excel files (with pandas)
+- Custom XML formats
+
+**Export Capabilities**:
+- Simulation results (CSV)
+- Chemistry reports (CSV, Excel)
+- Plot images (PNG, PDF, SVG)
+- Configuration backups
+
+#### 8.4.2 API Integration Potential
+
+**Future Development**:
+- REST API for remote control
+- Database connectivity
+- Real-time data feeds
+- Process control system integration
+
+#### 8.4.3 Scripting and Automation
+
+**Python Scripting**:
+```python
+# Example automation script
+from src.simulation.engine import SimulationEngine
+from src.models.simulation_data import SimulationParameters
+
+# Automated parameter sweep
+velocities = [1.5, 2.0, 2.5, 3.0]
+results = {}
+
+for velocity in velocities:
+    params = SimulationParameters(
+        total_time=150,
+        conveyor_velocity=velocity,
+        # ... other parameters
+    )
+    engine = SimulationEngine()
+    result = engine.run_simulation(params)
+    results[velocity] = result
+```
+
+### 8.5 Quality Assurance Features
+
+#### 8.5.1 Validation Framework
+
+**Input Validation**:
+- Parameter range checking
+- Material compatibility verification
+- Physics-based constraint validation
+- Error prevention and user guidance
+
+**Result Validation**:
+- Mass balance verification
+- Chemistry conservation checking
+- Physical realism assessment
+- Statistical significance testing
+
+#### 8.5.2 Error Detection and Handling
+
+**Common Error Categories**:
+1. **Configuration Errors**: Invalid parameters, missing data
+2. **Runtime Errors**: Numerical instabilities, memory issues
+3. **Results Errors**: Unphysical results, calculation errors
+4. **User Errors**: Incorrect inputs, misunderstanding
+
+**Error Recovery**:
+- Graceful degradation
+- Fallback calculations
+- User-friendly error messages
+- Suggested corrective actions
+
+#### 8.5.3 Testing and Verification
+
+**Unit Testing**:
+- Individual component testing
+- Algorithm verification
+- Edge case handling
+- Performance benchmarking
+
+**Integration Testing**:
+- End-to-end workflow testing
+- Cross-platform compatibility
+- User interface testing
+- Data integrity verification
+
+---
+
+## 9. File Management
+
+### 9.1 Case File Structure
+
+#### 9.1.1 File Format
+The application uses JSON format for case files, providing:
+- Human-readable text format
+- Cross-platform compatibility
+- Version control friendly
+- Easy backup and sharing
+
+#### 9.1.2 Case File Components
+
+**Standard Mode Case File**:
+```json
+{
+  "version": "1.0",
+  "mode": "standard",
+  "created": "2025-08-12T10:30:00Z",
+  "parameters": {
+    "total_time": 150.0,
+    "conveyor_length": 50.0,
+    "resolution_size": 1.0,
+    "conveyor_velocity": 2.0
+  },
+  "materials": [
+    "Lump_Ore",
+    "Sinter",
+    "Limestone"
+  ],
+  "silos": [
+    {
+      "material": "Lump_Ore",
+      "capacity": 1000.0,
+      "flow_rate": 5.0,
+      "material_position": 0,
+      "silo_position": 10,
+      "start_time": 0.0
+    }
+  ]
+}
+```
+
+**BF Mode Case File** (Extended):
+```json
+{
+  "version": "1.0",
+  "mode": "bf",
+  "created": "2025-08-12T10:30:00Z",
+  "parameters": { /* same as standard */ },
+  "materials": [ /* standard material names */ ],
+  "silos": [ /* standard silo data */ ],
+  "bf_parameters": { /* BF-specific parameters */ },
+  "bf_materials": {
+    "Pellets": {
+      "chemistry": {
+        "Fe": 65.5,
+        "SiO2": 4.2,
+        "CaO": 0.5,
+        "MgO": 0.3,
+        "Al2O3": 0.8
+      },
+      "density": 2200,
+      "color": "#8B4513"
+    }
+  },
+  "bf_silos": [ /* BF bunker configurations */ ]
+}
+```
+
+### 9.2 File Operations
+
+#### 9.2.1 Creating New Cases
+**Menu**: File → New (Ctrl+N)
+
+**Process**:
+1. Confirmation dialog if unsaved changes exist
+2. Reset all input fields to defaults
+3. Clear all tables
+4. Clear all plots
+5. Reset to Standard Mode
+6. Update status bar
+
+**Best Practices**:
+- Save current work before creating new case
+- Use descriptive names for new cases
+- Start with template cases when possible
+
+#### 9.2.2 Opening Existing Cases
+**Menu**: File → Open (Ctrl+O)
+
+**Process**:
+1. File browser dialog
+2. File format validation
+3. Version compatibility check
+4. Data loading and validation
+5. UI update with loaded data
+6. Mode switching if necessary
+
+**Supported Locations**:
+- Local file system
+- Network drives
+- Cloud storage (if mounted)
+- Recent files list
+
+#### 9.2.3 Saving Cases
+**Menu**: File → Save (Ctrl+S) or Save As (Ctrl+Shift+S)
+
+**Save Process**:
+1. Collect all current settings
+2. Validate data completeness
+3. Format data as JSON
+4. Write to file with backup
+5. Update window title
+6. Confirm save success
+
+**Auto-Save Features**:
+- Periodic background saves (configurable)
+- Recovery files for crash protection
+- Version history maintenance
+
+#### 9.2.4 File Naming Conventions
+
+**Recommended Naming**:
+```
+ProjectName_Description_Date.json
+Examples:
+- SteelPlant_BaseCase_20250812.json
+- BlastFurnace_HighGradePellets_20250812.json
+- MiningOp_Campaign1_20250812.json
+```
+
+**Avoid**:
+- Spaces in filenames
+- Special characters (/ \ : * ? " < > |)
+- Very long names (> 50 characters)
+
+### 9.3 File Organization
+
+#### 9.3.1 Directory Structure
+**Recommended Organization**:
+```
+Projects/
+├── Steel_Plant_Study/
+│   ├── Base_Cases/
+│   │   ├── Standard_Operation.json
+│   │   └── Peak_Production.json
+│   ├── Optimization_Cases/
+│   │   ├── Velocity_Study/
+│   │   └── Material_Ratio_Study/
+│   └── Final_Results/
+├── Mining_Operation/
+└── Research_Projects/
+```
+
+#### 9.3.2 Version Control
+**Manual Versioning**:
+- Use date stamps in filenames
+- Maintain changelog in separate file
+- Archive old versions regularly
+
+**Git Integration** (Advanced):
+- Track case files in version control
+- Collaborate on simulation studies
+- Maintain project history
+
+#### 9.3.3 Backup Strategies
+**Local Backups**:
+- Daily automated backups
+- Multiple backup locations
+- Regular backup verification
+
+**Cloud Backups**:
+- Sync with cloud storage
+- Cross-platform accessibility
+- Disaster recovery protection
+
+### 9.4 Import/Export Features
+
+#### 9.4.1 Material Data Import
+**CSV Format for Materials**:
+```csv
+Material,Fe%,SiO2%,CaO%,MgO%,Al2O3%,Density,Color
+Pellets,65.5,4.2,0.5,0.3,0.8,2200,#8B4513
+Sinter,57.2,9.8,9.5,1.2,1.8,1900,#CD853F
+```
+
+**Import Process**:
+1. File → Import → Material Data
+2. Select CSV file
+3. Map columns to properties
+4. Validate chemistry data
+5. Add to material database
+
+#### 9.4.2 Silo Configuration Import
+**CSV Format for Silos**:
+```csv
+Material,Capacity,FlowRate,Position,StartTime
+Lump_Ore,1000,5.0,10,0
+Sinter,800,4.0,20,15
+Limestone,500,2.5,30,30
+```
+
+#### 9.4.3 Batch Processing
+**Multiple Case Processing**:
+1. Create template case file
+2. Generate parameter variations
+3. Run batch simulations
+4. Collect and analyze results
+
+### 9.5 File Troubleshooting
+
+#### 9.5.1 Common File Issues
+
+**Issue**: "File not found" error
+**Causes**: 
+- File moved or deleted
+- Network drive disconnected
+- Incorrect path
+
+**Solutions**:
+- Verify file location
+- Check network connectivity
+- Use "Browse" to relocate file
+
+**Issue**: "Invalid file format" error
+**Causes**:
+- Corrupted file
+- Wrong file type
+- Version incompatibility
+
+**Solutions**:
+- Check file extension (.json)
+- Verify file size (not 0 bytes)
+- Try backup copy
+
+**Issue**: "Permission denied" error
+**Causes**:
+- File is read-only
+- Insufficient user permissions
+- File in use by another program
+
+**Solutions**:
+- Check file properties
+- Run as administrator
+- Close other applications
+
+#### 9.5.2 Data Recovery
+**Recovery Options**:
+1. **Auto-save files**: Check temp directory
+2. **Backup copies**: Look for .bak files
+3. **Version history**: Use previous versions
+4. **Export from memory**: If application still running
+
+**Prevention**:
+- Regular saves (Ctrl+S)
+- Enable auto-save
+- Maintain backups
+- Use version control
+
+#### 9.5.3 File Validation
+**Validation Checks**:
+- JSON syntax validation
+- Data type verification
+- Range checking
+- Completeness assessment
+
+**Repair Procedures**:
+1. Identify error location
+2. Fix syntax if possible
+3. Restore from backup
+4. Recreate if necessary
+
+---
+
+## 10. Export and Reporting
+
+### 10.1 Standard Mode Export Options
+
+#### 10.1.1 Simulation Results Export
+**CSV Export Features**:
+- Time-series data for all materials
+- Flow rates and proportions
+- Statistical summaries
+- Configuration parameters
+
+**Export Format**:
+```csv
+Time [s],Lump_Ore_Flow [kg/s],Sinter_Flow [kg/s],Total_Flow [kg/s],Lump_Ore_%,Sinter_%
+0.0,5.0,0.0,5.0,100.0,0.0
+0.5,5.0,0.0,5.0,100.0,0.0
+15.0,5.0,4.0,9.0,55.6,44.4
+...
+```
+
+#### 10.1.2 Plot Export
+**Supported Formats**:
+- **PNG**: High-quality raster images
+- **PDF**: Vector format for publications
+- **SVG**: Scalable vector graphics
+- **EPS**: Encapsulated PostScript
+
+**Export Process**:
+1. Right-click on plot area
+2. Select "Save figure"
+3. Choose format and location
+4. Adjust quality settings
+5. Confirm export
+
+### 10.2 Blast Furnace Mode Reporting
+
+#### 10.2.1 Comprehensive Chemistry Report
+**Menu**: Blast Furnace → Export Chemistry Report
+
+**Report Sections**:
+
+**Section 1: Material Chemistry Definitions**
+```csv
+=== MATERIAL CHEMISTRY DEFINITIONS ===
+Material,Fe%,SiO2%,CaO%,MgO%,Al2O3%,Density (kg/m³),Basicity_B2
+Pellets,65.50,4.20,0.50,0.30,0.80,2200.0,0.119
+Sinter,57.20,9.80,9.50,1.20,1.80,1900.0,0.969
+...
+```
+
+**Section 2: Chemistry Time Series**
+```csv
+=== CHEMISTRY TIME SERIES AT CONVEYOR DISCHARGE ===
+Time (s),Weighted_Fe%,Weighted_SiO2%,Weighted_CaO%,Weighted_MgO%,Weighted_Al2O3%,Basicity_B2,Total_Flow (kg/s)
+0.0,65.50,4.20,0.50,0.30,0.80,0.119,5.00
+0.5,65.50,4.20,0.50,0.30,0.80,0.119,5.00
+...
+```
+
+**Section 3: Statistical Summary**
+```csv
+=== STATISTICAL SUMMARY ===
+Parameter,Average,Std Dev,Min,Max,Target,Quality
+Fe%,62.45,2.15,58.30,65.50,58-66%,Good
+SiO2%,6.20,1.80,4.20,9.80,4-8%,-
+Basicity B2,1.08,0.15,0.80,1.25,1.0-1.2,Good
+```
+
+**Section 4: Simulation Parameters**
+```csv
+=== SIMULATION PARAMETERS ===
+Parameter,Value,Unit
+Total Time,150.0,seconds
+Conveyor Length,50.0,meters
+Conveyor Velocity,2.0,m/s
+Mass Balance Error,0.023,%
+```
+
+#### 10.2.2 Quality Assessment Report
+**Quality Indicators**:
+- **Fe Stability**: Standard deviation < 2.0% = Good
+- **Basicity Control**: Average within 1.0-1.2 = Good
+- **Overall Assessment**: Summary of all indicators
+
+**Trend Analysis**:
+- Moving averages
+- Trend direction indicators
+- Correlation coefficients
+- Process capability indices
+
+#### 10.2.3 Operational Report
+**Production Summary**:
+- Total material processed (tons)
+- Average chemistry composition
+- Quality compliance percentage
+- Operational efficiency metrics
+
+**Material Consumption**:
+- Individual material usage
+- Cost analysis (if unit costs provided)
+- Inventory requirements
+- Procurement recommendations
+
+### 10.3 Custom Report Generation
+
+#### 10.3.1 Report Templates
+**Standard Templates**:
+- Daily production report
+- Quality control summary
+- Process optimization study
+- Equipment performance analysis
+
+**Template Structure**:
+```
+1. Executive Summary
+2. Simulation Overview
+3. Key Results
+4. Quality Assessment
+5. Recommendations
+6. Technical Details
+7. Appendices
+```
+
+#### 10.3.2 Automated Reporting
+**Batch Report Generation**:
+```python
+# Example automation script
+def generate_daily_report(simulation_results):
+    report = {
+        'date': today(),
+        'total_throughput': calculate_throughput(results),
+        'quality_metrics': assess_quality(results),
+        'recommendations': generate_recommendations(results)
+    }
+    export_to_pdf(report, 'daily_report.pdf')
+```
+
+#### 10.3.3 Report Customization
+**Configurable Elements**:
+- Company logos and headers
+- Custom quality thresholds
+- Specific chart types
+- Color schemes and branding
+- Units and conventions
+
+### 10.4 Data Integration
+
+#### 10.4.1 Database Export
+**Supported Databases**:
+-# Conveyor Blending Model
+## Comprehensive User Manual
+### Version 1.0 - With Blast Furnace Mode Integration
+
+**Developed by:** Roberto Abreu Alencar  
+**Last Updated:** August 2025  
+**Manual Version:** 1.0  
+
+---

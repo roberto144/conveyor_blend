@@ -13,8 +13,8 @@ class ConfigManager:
         """Load configuration from file"""
         default_config = {
             "simulation": {
-                "default_total_time": 100.0,
-                "default_conveyor_length": 100.0,
+                "default_total_time": 150.0,
+                "default_conveyor_length": 35.0,
                 "default_resolution_size": 1.0,
                 "default_conveyor_velocity": 2.0,
                 "max_simulation_time": 86400.0
@@ -27,7 +27,7 @@ class ConfigManager:
             },
             "materials": {
                 "default_materials": [
-                    "Steel", "Aluminum", "Concrete", "Sand", "Gravel", "Coal"
+                    "Lump Ore", "Sinter", "Pellet", "Nut Coke", "Limestone", "Quartz", "Dolomite"
                 ]
             },
             "validation": {

@@ -15,7 +15,7 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName("Conveyor Blending Model")
     app.setApplicationVersion("1.0")
-    app.setOrganizationName("Engineering Solutions")
+    app.setOrganizationName("Roberto Abreu Alencar")
     
     # Set application style
     app.setStyle('Fusion')  # Modern cross-platform style

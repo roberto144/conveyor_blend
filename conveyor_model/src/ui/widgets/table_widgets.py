@@ -16,7 +16,7 @@ class MaterialTable(QWidget):
         self.setup_ui()
         
         # Default materials
-        self.default_materials = ['Steel', 'Aluminum', 'Concrete', 'Sand', 'Gravel']
+        self.default_materials = ["Lump Ore", "Sinter", "Pellet", "Dolomite", "Limestone","Nut Coke", "Quartz"]
         self.set_materials(self.default_materials)
     
     def setup_ui(self):
