@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
-                             QGroupBox, QFileDialog)
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+                             QGroupBox, QFileDialog, QMessageBox, QApplication)
+from PyQt5.QtCore import Qt
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from ...visualization.plotter import ConveyorPlotter
 from ...models.simulation_data import SimulationResults
@@ -56,6 +57,20 @@ class PlotWidget(QWidget):
         self.current_results = None
     
     def export_plots(self):
+        """
+        Export plots to file with progress indication
+        """
+        try:
+            filename, _ = QFileDialog.getSaveFileName(
+                self, "Export Plots", "", "PNG Files (*.png);;All Files (*)"
+            )
+            if filename:
+                QApplication.setOverrideCursor(Qt.WaitCursor)
+                self.plotter.export_plots(filename)
+                QApplication.restoreOverrideCursor()
+                QMessageBox.information(self, "Success", "Plots exported successfully!")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to export plots: {str(e)}")
         """Export plots to file"""
         filename, _ = QFileDialog.getSaveFileName(
             self, "Export Plots", "", 

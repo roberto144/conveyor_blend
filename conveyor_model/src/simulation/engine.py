@@ -6,7 +6,11 @@ from ..models.conveyor import Conveyor
 from ..models.simulation_data import SimulationParameters, SimulationResults
 from .calculator import MatrixCalculator
 from .validator import SimulationValidator
-from ..utils.exceptions import SimulationError
+from ..utils.exceptions import SimulationError, ValidationError
+from ..utils.logging import get_logger
+from typing import Optional, Union
+
+logger = get_logger(__name__)
 
 class SimulationEngine:
     """Enhanced simulation engine for conveyor blending model with BF support"""
@@ -19,9 +23,14 @@ class SimulationEngine:
         
     def initialize_blast_furnace(self):
         """Initialize blast furnace specific components"""
-        self.bf_initialized = True
-        self.chemistry_data = {}
-        print("Blast furnace mode initialized")
+        logger.info("Initializing blast furnace mode")
+        try:
+            self.bf_initialized = True
+            self.chemistry_data = {}
+            logger.info("Blast furnace mode initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize blast furnace mode: {e}")
+            raise
         
     def run_simulation(self, parameters: SimulationParameters) -> SimulationResults:
         """
@@ -37,15 +46,24 @@ class SimulationEngine:
             ValidationError: If parameters are invalid
             SimulationError: If simulation fails
         """
-        # Validate input parameters
-        self.validator.validate_parameters(parameters)
-        
-        # Initialize simulation state
-        conveyor = Conveyor(parameters.conveyor_velocity, parameters.conveyor_length)
-        dt = parameters.resolution_size / conveyor.velocity
-        n_steps = int(parameters.total_time / dt)
-        n_segments = int(conveyor.length / parameters.resolution_size)
-        n_materials = len(parameters.materials)
+        logger.info("Starting simulation with parameters: %s", parameters)
+        try:
+            # Validate input parameters
+            self.validator.validate_parameters(parameters)
+            logger.debug("Parameters validated successfully")
+            
+            # Initialize simulation state
+            conveyor = Conveyor(parameters.conveyor_velocity, parameters.conveyor_length)
+            dt = parameters.resolution_size / conveyor.velocity
+            n_steps = int(parameters.total_time / dt)
+            n_segments = int(conveyor.length / parameters.resolution_size)
+            n_materials = len(parameters.materials)
+        except ValidationError as e:
+            logger.error(f"Parameter validation failed: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error during simulation initialization: {e}")
+            raise SimulationError(f"Failed to initialize simulation: {e}")
         
         # Initialize matrices
         material_matrix = np.zeros((n_materials, n_segments))
@@ -182,6 +200,30 @@ class SimulationEngine:
                 chemistry_matrix[material_pos, silo_pos, 4] += chemistry.get('Al2O3', 0) * weight
     
     def _shift_chemistry_matrix(self, chemistry_matrix: np.ndarray, steps: int) -> np.ndarray:
+        """
+        Shift chemistry matrix contents right by specified steps using vectorized operations
+        
+        Args:
+            chemistry_matrix: Input matrix to shift
+            steps: Number of positions to shift right
+            
+        Returns:
+            Shifted matrix with same dimensions
+            
+        Note:
+            Uses vectorized NumPy operations for improved performance
+        """
+        if steps <= 0:
+            return chemistry_matrix
+            
+        rows, cols = chemistry_matrix.shape
+        shifted = np.zeros_like(chemistry_matrix)
+        
+        if steps < cols:
+            # Vectorized shift operation
+            shifted[:, steps:] = chemistry_matrix[:, :-steps]
+        
+        return shifted
         """Shift chemistry matrix along with material matrix"""
         if steps <= 0:
             return chemistry_matrix.copy()
@@ -234,11 +276,12 @@ class SimulationEngine:
                             weight = material_flow / total_flow
                             chemistry = chemistry_data[material_name]['chemistry']
                             
-                            weighted_fe += chemistry.get('Fe', 0) * weight
-                            weighted_sio2 += chemistry.get('SiO2', 0) * weight
-                            weighted_cao += chemistry.get('CaO', 0) * weight
-                            weighted_mgo += chemistry.get('MgO', 0) * weight
-                            weighted_al2o3 += chemistry.get('Al2O3', 0) * weight
+                            chemistry_dict = chemistry if isinstance(chemistry, dict) else {}
+                            weighted_fe += chemistry_dict.get('Fe', 0) * weight
+                            weighted_sio2 += chemistry_dict.get('SiO2', 0) * weight
+                            weighted_cao += chemistry_dict.get('CaO', 0) * weight
+                            weighted_mgo += chemistry_dict.get('MgO', 0) * weight
+                            weighted_al2o3 += chemistry_dict.get('Al2O3', 0) * weight
                 
                 # Calculate basicity (B2)
                 basicity_b2 = weighted_cao / max(weighted_sio2, 0.1) if weighted_sio2 > 0.1 else 0
@@ -259,20 +302,27 @@ class SimulationEngine:
         """Add BF-specific enhancements to results"""
         # Calculate discharge chemistry statistics
         if hasattr(results, 'chemistry_trends'):
-            trends = results.chemistry_trends
+            trends = results.chemistry_trends if results.chemistry_trends is not None else {}
             
             # Add statistical analysis
-            if trends['fe_trend']:
-                results.metadata['avg_fe_content'] = np.mean(trends['fe_trend'])
-                results.metadata['fe_std'] = np.std(trends['fe_trend'])
-                results.metadata['avg_basicity'] = np.mean(trends['basicity_trend'])
-                results.metadata['basicity_std'] = np.std(trends['basicity_trend'])
+            if trends and 'fe_trend' in trends and trends['fe_trend'] is not None:
+                fe_trend = np.array(trends['fe_trend'])
+                basicity_trend = np.array(trends.get('basicity_trend', []))
                 
-                # Quality indicators
-                results.metadata['fe_stability'] = 'Good' if np.std(trends['fe_trend']) < 2.0 else 'Poor'
-                basicity_target = 1.1
-                basicity_deviation = abs(np.mean(trends['basicity_trend']) - basicity_target)
-                results.metadata['basicity_quality'] = 'Good' if basicity_deviation < 0.1 else 'Poor'
+                if len(fe_trend) > 0:
+                    results.metadata['avg_fe_content'] = float(np.mean(fe_trend))
+                    results.metadata['fe_std'] = float(np.std(fe_trend))
+                    
+                    # Quality indicators
+                    results.metadata['fe_stability'] = 'Good' if float(np.std(fe_trend)) < 2.0 else 'Poor'
+                    
+                    if len(basicity_trend) > 0:
+                        results.metadata['avg_basicity'] = float(np.mean(basicity_trend))
+                        results.metadata['basicity_std'] = float(np.std(basicity_trend))
+                        
+                        basicity_target = 1.1
+                        basicity_deviation = abs(float(np.mean(basicity_trend)) - basicity_target)
+                        results.metadata['basicity_quality'] = 'Good' if basicity_deviation < 0.1 else 'Poor'
         
         return results
     

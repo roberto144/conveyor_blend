@@ -542,10 +542,25 @@ The application features a modern, intuitive interface designed for efficient wo
 #### Standard Mode Results:
 
 **Four-Plot Layout:**
-1. **Top Left**: Material flows over time (line plot)
-2. **Bottom Left**: Material proportions (stacked area)
-3. **Top Right**: Total flow rate (line plot)
-4. **Bottom Right**: Silo operation timeline (Gantt chart)
+1. **Top Left**: Material Flow Rates - Individual material flow tracking (line plot)
+   - Time (s) vs Flow Rate (kg/s)
+   - Legend in upper left corner showing material names only
+   - Optimized font sizes: Title (11pt), Labels (10pt), Legend (8pt)
+
+2. **Bottom Left**: Material Composition - Proportional composition over time (stacked area)
+   - Time (s) vs Proportion (%)
+   - Legend in upper left with simplified material names
+   - Scale fixed from 0-100%
+
+3. **Top Right**: Total Belt Flow Rate - Combined material flow (line plot)
+   - Time (s) vs Total Flow Rate (kg/s)
+   - Single "Total" legend entry
+   - Consistent positioning and styling
+
+4. **Bottom Right**: Operation Schedule - Silo operation timeline (Gantt chart)
+   - Time (s) vs Silo Number
+   - Clear material name labels
+   - Flow rates displayed in kg/s without decimal points
 
 #### BF Mode Results:
 

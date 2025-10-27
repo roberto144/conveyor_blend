@@ -5,11 +5,12 @@ Connects conveyor discharge to bunker charging sequence for realistic BF operati
 """
 
 import numpy as np
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Union
 from dataclasses import dataclass, field
 from datetime import datetime
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.patches import Rectangle
 
 from ..models.simulation_data import SimulationResults, SimulationParameters
 from .bf_bunker_viz import BlastFurnaceBunker, MaterialLayer
@@ -293,10 +294,20 @@ class ConveyorBunkerVisualization:
     def __init__(self, system: ConveyorToBunkerSystem):
         self.system = system
         self.fig = None
+        self.axes = {}
+        self.canvas = None
         
+    def __del__(self):
+        """Cleanup resources when object is destroyed"""
+        if self.fig is not None:
+            plt.close(self.fig)
+            
     def create_system_visualization(self, figsize=(16, 10)):
         """Create comprehensive system visualization"""
+        if self.fig is not None:
+            plt.close(self.fig)  # Close existing figure
         self.fig = plt.figure(figsize=figsize)
+        self.canvas = FigureCanvas(self.fig)
         
         # Create 2x3 subplot layout
         gs = self.fig.add_gridspec(2, 3, height_ratios=[1, 1], width_ratios=[1, 1, 1])
@@ -329,7 +340,8 @@ class ConveyorBunkerVisualization:
         self._update_bunker_plot()
         self._update_chemistry_plot()
         
-        self.fig.canvas.draw() if hasattr(self.fig, 'canvas') else None
+        if self.fig is not None and hasattr(self.fig, 'canvas'):
+            self.fig.canvas.draw()
     
     def _update_conveyor_plot(self):
         """Update conveyor discharge plot"""
@@ -365,12 +377,12 @@ class ConveyorBunkerVisualization:
         fill_height = status['fill_percentage'] / 100 * 10  # Scale to 10 units height
         
         # Draw bin outline
-        bin_rect = plt.Rectangle((0, 0), 4, 10, fill=False, edgecolor='black', linewidth=2)
+        bin_rect = Rectangle((0, 0), 4, 10, fill=False, edgecolor='black', linewidth=2)
         self.ax_bin.add_patch(bin_rect)
         
         # Draw fill level
         if fill_height > 0:
-            fill_rect = plt.Rectangle((0, 0), 4, fill_height, 
+            fill_rect = Rectangle((0, 0), 4, fill_height, 
                                     facecolor='lightblue', alpha=0.7)
             self.ax_bin.add_patch(fill_rect)
         
@@ -400,7 +412,7 @@ class ConveyorBunkerVisualization:
         bunker = self.system.bunker
         
         # Draw bunker outline
-        bunker_rect = plt.Rectangle((0, 0), bunker.diameter, bunker.height, 
+        bunker_rect = Rectangle((0, 0), bunker.diameter, bunker.height, 
                                   fill=False, edgecolor='black', linewidth=2)
         self.ax_bunker.add_patch(bunker_rect)
         
@@ -409,7 +421,7 @@ class ConveyorBunkerVisualization:
         
         for i, layer in enumerate(bunker.layers):
             color = colors[i % len(colors)]
-            layer_rect = plt.Rectangle((0, layer.position), bunker.diameter, layer.height,
+            layer_rect = Rectangle((0, layer.position), bunker.diameter, layer.height,
                                      facecolor=color, alpha=0.8, edgecolor='black')
             self.ax_bunker.add_patch(layer_rect)
             

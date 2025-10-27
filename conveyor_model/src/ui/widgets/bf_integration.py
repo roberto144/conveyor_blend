@@ -9,41 +9,17 @@ from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                              QGroupBox, QComboBox, QDoubleSpinBox, QSpinBox,
                              QSplitter, QLabel, QAction, QMessageBox, QFileDialog)
 from PyQt5.QtCore import Qt, pyqtSignal
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import numpy as np
-from typing import Dict, List
+from typing import Dict, List, Optional
 import sys
 import os
+from matplotlib.figure import Figure
+from matplotlib.patches import Rectangle
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt import NavigationToolbar2QT as NavigationToolbar
 
-# Ensure proper import of BF visualization module
-try:
-    from ...simulation.bf_bunker_viz import BlastFurnaceBunker, BunkerVisualization
-except ImportError:
-    print("Warning: BF bunker visualization module not found. Using placeholder.")
-    
-    # Placeholder classes if import fails
-    class BlastFurnaceBunker:
-        def __init__(self, bunker_id, diameter, height):
-            self.bunker_id = bunker_id
-            self.diameter = diameter
-            self.height = height
-            self.layers = []
-        
-        def add_material_layer(self, material_name, volume, chemistry, timestamp):
-            pass
-    
-    class BunkerVisualization:
-        def __init__(self, bunker):
-            self.bunker = bunker
-            self.fig = plt.figure(figsize=(12, 8))
-        
-        def create_visualization(self, figsize=(12, 8)):
-            pass
-        
-        def update_all(self):
-            pass
+from ...simulation.bf_bunker_viz import BlastFurnaceBunker
+from ...visualization.bunker_visualizer import BunkerVisualizer
 
 class BlastFurnaceMaterialWidget(QWidget):
     """Widget for defining blast furnace materials with chemistry"""
@@ -398,10 +374,10 @@ class BlastFurnaceBunkerWidget(QWidget):
                 height=self.height_spin.value()
             )
             
-            self.viz = BunkerVisualization(self.bunker)
-            self.viz.create_visualization(figsize=(12, 8))
+            # Create and setup visualization widget
+            from .visualization.bunker_viz_widget import BunkerVisualizationWidget
             
-            # Embed matplotlib figure in PyQt5
+            # Remove old widgets if they exist
             if self.canvas:
                 self.canvas_layout.removeWidget(self.canvas)
                 self.canvas.deleteLater()
@@ -409,13 +385,15 @@ class BlastFurnaceBunkerWidget(QWidget):
             if self.toolbar:
                 self.canvas_layout.removeWidget(self.toolbar)
                 self.toolbar.deleteLater()
+                
+            # Create visualization widget
+            self.viz_widget = BunkerVisualizationWidget(self.bunker, parent=self)
+            self.canvas_layout.addWidget(self.viz_widget)
             
-            self.canvas = FigureCanvas(self.viz.fig)
-            self.canvas_layout.addWidget(self.canvas)
-            
-            # Add navigation toolbar
-            self.toolbar = NavigationToolbar(self.canvas, self)
-            self.canvas_layout.addWidget(self.toolbar)
+            # Store references for compatibility with existing code
+            self.viz = self.viz_widget.viz
+            self.canvas = self.viz_widget.canvas
+            self.toolbar = self.viz_widget.toolbar
             
         except Exception as e:
             print(f"Error creating bunker visualization: {e}")
@@ -424,26 +402,36 @@ class BlastFurnaceBunkerWidget(QWidget):
     
     def _create_fallback_visualization(self):
         """Create a simple fallback visualization if BF module fails"""
-        fig = plt.figure(figsize=(12, 8))
+        # Create figure for fallback visualization
+        fig = Figure(figsize=(12, 8))
         ax = fig.add_subplot(111)
         ax.text(0.5, 0.5, 'Bunker Visualization\n(BF Module Loading)', 
-                horizontalalignment='center', verticalalignment='center',
-                transform=ax.transAxes, fontsize=16)
+               horizontalalignment='center', verticalalignment='center',
+               transform=ax.transAxes, fontsize=16)
         ax.set_title('Blast Furnace Bunker')
         
+        # Clean up old widgets
         if self.canvas:
             self.canvas_layout.removeWidget(self.canvas)
             self.canvas.deleteLater()
-        
-        self.canvas = FigureCanvas(fig)
-        self.canvas_layout.addWidget(self.canvas)
-        
+            self.canvas = None
+            
         if self.toolbar:
             self.canvas_layout.removeWidget(self.toolbar)
             self.toolbar.deleteLater()
+            self.toolbar = None
+            
+            if hasattr(self, 'viz_widget') and self.viz_widget is not None:
+                self.canvas_layout.removeWidget(self.viz_widget)
+                self.viz_widget.deleteLater()
+                self.viz_widget = None        # Create new canvas and toolbar
+        self.canvas = FigureCanvas(fig)
+        self.canvas_layout.addWidget(self.canvas)
         
         self.toolbar = NavigationToolbar(self.canvas, self)
         self.canvas_layout.addWidget(self.toolbar)
+        
+        self.viz = None  # Clear reference to visualizer
     
     def update_bunker_params(self):
         """Update bunker parameters"""
@@ -486,63 +474,14 @@ class BlastFurnaceBunkerWidget(QWidget):
     def update_visualization(self):
         """Update the bunker visualization"""
         try:
-            if self.viz and hasattr(self.viz, 'update_all'):
-                self.viz.update_all()
-                self.canvas.draw()
+            if self.viz and self.viz_widget:
+                self.viz_widget.update_plots()
             else:
                 print("Visualization not available - using fallback")
-                self._update_fallback_visualization()
+                self._create_fallback_visualization()
         except Exception as e:
             print(f"Error updating visualization: {e}")
-            self._update_fallback_visualization()
-    
-    def _update_fallback_visualization(self):
-        """Update fallback visualization with basic bunker info"""
-        if not self.canvas:
-            return
-        
-        fig = self.canvas.figure
-        fig.clear()
-        
-        ax = fig.add_subplot(111)
-        
-        # Draw simple bunker representation
-        bunker_height = self.height_spin.value()
-        bunker_width = self.diameter_spin.value()
-        
-        # Bunker outline
-        bunker_rect = plt.Rectangle((0, 0), bunker_width, bunker_height, 
-                                   fill=False, edgecolor='black', linewidth=2)
-        ax.add_patch(bunker_rect)
-        
-        # Show material layers if bunker exists
-        if self.bunker and hasattr(self.bunker, 'layers'):
-            current_height = 0
-            colors = ['#8B4513', '#CD853F', '#A0522D', '#D3D3D3', '#C0C0C0', '#2F4F4F', '#FFE4B5']
-            
-            for i, layer in enumerate(self.bunker.layers):
-                color = colors[i % len(colors)]
-                layer_rect = plt.Rectangle((0, current_height), bunker_width, layer.height,
-                                         facecolor=color, alpha=0.7, edgecolor='black')
-                ax.add_patch(layer_rect)
-                
-                # Add label
-                if layer.height > bunker_height * 0.05:
-                    ax.text(bunker_width/2, current_height + layer.height/2,
-                           f"{layer.material_name}\n{layer.volume:.1f} m³",
-                           ha='center', va='center', fontsize=8)
-                
-                current_height += layer.height
-        
-        ax.set_xlim(-0.5, bunker_width + 0.5)
-        ax.set_ylim(0, bunker_height * 1.1)
-        ax.set_xlabel('Width (m)')
-        ax.set_ylabel('Height (m)')
-        ax.set_title('Bunker Material Layers')
-        ax.grid(True, alpha=0.3)
-        ax.set_aspect('equal')
-        
-        self.canvas.draw()
+            self._create_fallback_visualization()
     
     def clear_bunker(self):
         """Clear all materials from bunker"""
@@ -582,47 +521,55 @@ class BlastFurnaceBunkerWidget(QWidget):
                            'Basicity B2', 'Basicity B4'])
             
             # Data
-            for i, layer in enumerate(self.bunker.layers):
-                if hasattr(layer, 'basicity_b2'):
-                    b2 = layer.basicity_b2
-                    b4 = layer.basicity_b4
-                else:
-                    # Calculate basicity if not available
-                    b2 = layer.cao_content / max(layer.sio2_content, 0.1)
-                    basic = layer.cao_content + layer.mgo_content
-                    acidic = layer.sio2_content + layer.al2o3_content
-                    b4 = basic / max(acidic, 0.1)
+            if self.bunker and hasattr(self.bunker, 'layers'):
+                for i, layer in enumerate(self.bunker.layers):
+                    if hasattr(layer, 'basicity_b2'):
+                        b2 = layer.basicity_b2
+                        b4 = layer.basicity_b4
+                    else:
+                        # Calculate basicity if not available
+                        b2 = layer.cao_content / max(layer.sio2_content, 0.1)
+                        basic = layer.cao_content + layer.mgo_content
+                        acidic = layer.sio2_content + layer.al2o3_content
+                        b4 = basic / max(acidic, 0.1)
+                    
+                    writer.writerow([
+                        i + 1,
+                        layer.material_name,
+                        f"{layer.height:.2f}",
+                        f"{layer.volume:.2f}",
+                        f"{layer.fe_content:.2f}",
+                        f"{layer.sio2_content:.2f}",
+                        f"{layer.cao_content:.2f}",
+                        f"{layer.mgo_content:.2f}",
+                        f"{layer.al2o3_content:.2f}",
+                        f"{b2:.3f}",
+                        f"{b4:.3f}"
+                    ])
                 
-                writer.writerow([
-                    i + 1,
-                    layer.material_name,
-                    f"{layer.height:.2f}",
-                    f"{layer.volume:.2f}",
-                    f"{layer.fe_content:.2f}",
-                    f"{layer.sio2_content:.2f}",
-                    f"{layer.cao_content:.2f}",
-                    f"{layer.mgo_content:.2f}",
-                    f"{layer.al2o3_content:.2f}",
-                    f"{b2:.3f}",
-                    f"{b4:.3f}"
-                ])
-            
-            # Add discharge prediction
-            writer.writerow([])
-            writer.writerow(['Discharge Chemistry Prediction (next 10 charges)'])
-            writer.writerow(['Charge', 'Fe%', 'SiO2%', 'CaO%', 'Basicity B2'])
-            
-            if hasattr(self.bunker, 'calculate_discharge_chemistry'):
-                for charge_num in range(1, 11):
-                    chemistry = self.bunker.calculate_discharge_chemistry(charge_volume=20)
-                    if chemistry:
-                        writer.writerow([
-                            charge_num,
-                            f"{chemistry.get('Fe', 0):.2f}",
-                            f"{chemistry.get('SiO2', 0):.2f}",
-                            f"{chemistry.get('CaO', 0):.2f}",
-                            f"{chemistry.get('B2', 0):.3f}"
-                        ])
+                # Add discharge prediction
+                writer.writerow([])
+                writer.writerow(['Discharge Chemistry Prediction (next 10 charges)'])
+                writer.writerow(['Charge', 'Fe%', 'SiO2%', 'CaO%', 'Basicity B2'])
+                
+                if hasattr(self.bunker, 'get_discharge_sequence'):
+                    for charge_num in range(1, 11):
+                        sequence = self.bunker.get_discharge_sequence(discharge_volume=20)
+                        if sequence:
+                            # Calculate average chemistry from sequence
+                            total_vol = sum(vol for _, vol in sequence)
+                            fe = sum(layer.fe_content * vol for layer, vol in sequence) / total_vol
+                            sio2 = sum(layer.sio2_content * vol for layer, vol in sequence) / total_vol
+                            cao = sum(layer.cao_content * vol for layer, vol in sequence) / total_vol
+                            b2 = cao / sio2 if sio2 > 0 else 0
+                            
+                            writer.writerow([
+                                charge_num,
+                                f"{fe:.2f}",
+                                f"{sio2:.2f}",
+                                f"{cao:.2f}",
+                                f"{b2:.3f}"
+                            ])
 
 # Integration helper functions
 def integrate_bf_mode_into_main_window():

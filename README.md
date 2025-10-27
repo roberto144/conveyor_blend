@@ -7,7 +7,11 @@ A modular PyQt5 application for simulating material flow and blending on conveyo
 ### Core Functionality
 - **Multi-material simulation** with configurable properties
 - **Flexible silo configuration** with individual flow rates and timing
-- **Real-time visualization** with multiple plot types
+- **Real-time visualization** with four specialized plot types:
+  - Material Flow Rates: Individual material flow tracking
+  - Material Composition: Proportional composition over time
+  - Total Belt Flow Rate: Combined material flow
+  - Operation Schedule: Silo operation timeline
 - **Save/load functionality** for case management
 - **Export capabilities** for results and plots
 
@@ -30,6 +34,11 @@ A modular PyQt5 application for simulating material flow and blending on conveyo
 ### Prerequisites
 - Python 3.8 or higher
 - pip package manager
+- Required packages:
+  - PyQt5 >= 5.15.0 (GUI framework)
+  - matplotlib >= 3.3.0 (Plotting)
+  - numpy >= 1.20.0 (Numerical computations)
+  - pandas >= 1.3.0 (Data handling)
 
 ### Install from Source
 ```bash
@@ -57,31 +66,50 @@ conveyor-model
 
 ```
 conveyor_model/
+├── main.py                   # Main application entry point
+├── bf_integration.py         # Blast Furnace integration module
+├── test.py                   # Testing module
+├── setup.py                  # Package setup configuration
+├── requirements.txt          # Project dependencies
+├── User_Manual              # Comprehensive user documentation
 ├── src/
-│   ├── main.py                 # Application entry point
-│   ├── models/                 # Data models
-│   │   ├── material.py         # Material class
-│   │   ├── silo.py            # Silo class  
-│   │   ├── conveyor.py        # Conveyor class
-│   │   └── simulation_data.py  # Data structures
-│   ├── simulation/             # Simulation engine
-│   │   ├── engine.py          # Core simulation logic
-│   │   ├── calculator.py      # Mathematical calculations
-│   │   └── validator.py       # Input validation
-│   ├── ui/                    # User interface
-│   │   ├── main_window.py     # Main window
-│   │   ├── widgets/           # Custom widgets
-│   │   └── dialogs/           # Dialog boxes
-│   ├── utils/                 # Utilities
-│   │   ├── file_handler.py    # File operations
-│   │   ├── config.py          # Configuration
-│   │   └── exceptions.py      # Custom exceptions
-│   └── visualization/         # Plotting
-│       └── plotter.py         # Plot generation
-├── config/                    # Configuration files
-├── tests/                     # Unit tests
-├── requirements.txt           # Dependencies
-└── README.md                 # This file
+│   ├── main.py              # Secondary entry point
+│   ├── models/              # Data models
+│   │   ├── __init__.py
+│   │   ├── conveyor.py      # Conveyor model
+│   │   ├── material.py      # Material definitions
+│   │   ├── silo.py         # Silo configurations
+│   │   └── simulation_data.py # Simulation data structures
+│   ├── simulation/          # Simulation engine
+│   │   ├── __init__.py
+│   │   ├── bf_bunker_viz.py           # BF bunker visualization
+│   │   ├── bf_conveyor_bunker_integration.py  # BF integration
+│   │   ├── calculator.py    # Mathematical computations
+│   │   ├── engine.py       # Core simulation logic
+│   │   └── validator.py    # Input validation
+│   ├── ui/                 # User interface components
+│   │   ├── __init__.py
+│   │   ├── main_window.py  # Main application window
+│   │   ├── dialogs/        # Dialog windows
+│   │   │   ├── __init__.py
+│   │   │   └── error_dialog.py
+│   │   └── widgets/        # Custom UI widgets
+│   │       ├── __init__.py
+│   │       ├── bf_integration.py
+│   │       ├── enhanced_bf_integration.py
+│   │       ├── input_widgets.py
+│   │       ├── plot_widgets.py
+│   │       └── table_widgets.py
+│   ├── utils/              # Utility functions
+│   │   ├── __init__.py
+│   │   ├── config.py      # Configuration management
+│   │   ├── exceptions.py  # Custom exceptions
+│   │   └── file_handler.py # File operations
+│   └── visualization/      # Plotting and visualization
+│       ├── __init__.py
+│       └── plotter.py     # Plot generation
+└── config/                # Configuration files
+    └── default_config.json  # Default settings
 ```
 
 ## Usage
@@ -90,7 +118,14 @@ conveyor_model/
 
 1. **Define Materials**
    - Add materials in the Materials table
-   - Default materials are provided (Steel, Aluminum, etc.)
+   - Default materials for blast furnace operation are provided:
+     - Lump Ore
+     - Sinter
+     - Pellet
+     - Dolomite
+     - Limestone
+     - Nut Coke
+     - Quartz
 
 2. **Configure Silos**
    - Set capacity, flow rate, and timing for each silo
@@ -105,7 +140,11 @@ conveyor_model/
 4. **Run Simulation**
    - Click "Run Simulation" or press F5
    - Monitor progress in status bar
-   - View results in real-time plots
+   - View results in real-time plots with:
+     - Clear material-specific legends in upper left
+     - Standardized units (s, kg/s, %)
+     - Optimized font sizes for readability
+     - Professional grid layout with 4 synchronized plots
 
 5. **Save/Export Results**
    - Save complete cases for later analysis

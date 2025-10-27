@@ -1,5 +1,8 @@
-import sys
+# Standard library imports
 import os
+import sys
+
+# Third-party imports
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 
