@@ -34,19 +34,30 @@ class MatrixCalculator:
         Calculate material proportions as percentages
         
         Args:
-            flow_data: Matrix with material flows and totals
+            flow_data: Matrix with material flows and totals. Must have at least 3 columns:
+                      material columns, followed by rate and total columns.
             
         Returns:
-            Matrix with proportions as percentages
+            Matrix with proportions as percentages for each material
+            
+        Raises:
+            ValueError: If input matrix has less than 3 columns
+            TypeError: If input is not a numpy array
         """
+        if not isinstance(flow_data, np.ndarray):
+            raise TypeError("Input must be a numpy array")
+            
         if flow_data.shape[1] < 3:
-            raise ValueError("Flow data must have at least 3 columns")
+            raise ValueError("Flow data matrix must have at least 3 columns")
         
         # Extract material data (all columns except last 2)
         materials = flow_data[:, :-2]
         totals = flow_data[:, -1]  # Last column is total
         
-        # Avoid division by zero
+        # Avoid division by zero using masked operations
+        mask = totals > 0
+        proportions = np.zeros_like(materials)
+        proportions[mask] = (materials[mask] / totals[mask, np.newaxis]) * 100
         with np.errstate(divide='ignore', invalid='ignore'):
             proportions = np.divide(materials, totals[:, np.newaxis]) * 100
             # Replace NaN and inf with 0

@@ -1,13 +1,18 @@
 # src/ui/main_window.py
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-                             QMessageBox, QProgressBar, QStatusBar, QMenuBar, 
-                             QAction, QApplication, QSplitter, QTabWidget)
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
-import traceback
-import numpy as np
 
-from typing import Dict
+# Standard library imports
 from datetime import datetime
+from typing import Dict
+import traceback
+
+# Third-party imports
+import numpy as np
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtWidgets import (
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QMessageBox, QProgressBar, QStatusBar, QMenuBar,
+    QAction, QApplication, QSplitter, QTabWidget
+)
 
 from .widgets.input_widgets import InputPanel
 from .widgets.table_widgets import SiloTable, MaterialTable  
